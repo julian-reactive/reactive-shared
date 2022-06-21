@@ -1,0 +1,59 @@
+{
+  "name": "reactive-shared",
+  "version": "1.0.0",
+  "description": "set of libraries for build apps based on list and forms",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julian-reactive/reactive-shared.git"
+  },
+  "author": "julian mosquera",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/julian-reactive/reactive-shared/issues"
+  },
+  "homepage": "https://github.com/julian-reactive/reactive-shared#readme",
+  "private": true,
+  "ts-standard": {
+    "project": "./tsconfig.json"
+  },
+  "dependencies": {
+    "@date-io/date-fns": "^2.14.0",
+    "@emotion/react": "11.9.3",
+    "@emotion/styled": "11.9.3",
+    "@fontsource/roboto": "4.5.7",
+    "@hookform/resolvers": "^2.9.1",
+    "@mui/icons-material": "5.8.4",
+    "@mui/lab": "^5.0.0-alpha.86",
+    "@mui/material": "5.8.4",
+    "@mui/system": "^5.8.4",
+    "axios": "0.27.2",
+    "date-fns": "^2.28.0",
+    "lodash": "4.17.21",
+    "moment": "^2.29.3",
+    "moment-timezone": "^0.5.34",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.32.2",
+    "react-number-format": "^4.9.3",
+    "react-query": "3.39.1",
+    "react-router-dom": "6.3.0",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^18.0.0",
+    "@types/react": "^18.0.14",
+    "@types/react-dom": "^18.0.5",
+    "html-webpack-plugin": "^5.5.0",
+    "snazzy": "^9.0.0",
+    "ts-loader": "^9.3.0",
+    "ts-standard": "^11.0.0",
+    "typescript": "^4.7.4",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "scripts": {
+    "build": "webpack",
+    "lint": "ts-standard src | snazzy"
+  }
+}
