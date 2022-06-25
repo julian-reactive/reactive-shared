@@ -11,8 +11,8 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 
 export interface AppTableProps extends TableProps {
-  headItems: string[] | number[]
-  bodyItems: string[][] | number[][]
+  headItems: string[]
+  bodyItems: string[][]
   size?: 'medium' | 'small'
   className?: string
 }
@@ -25,14 +25,17 @@ const AppTableComponent: React.FC<AppTableProps> = ({
   ...props
 }) => {
   const renderTableHead = useMemo(() => {
-    const rows = map(headItems, (name, idx) => (
-      <TableCell
-        key={`tableCell-${name}-${idx}`}
-        align={parseInt(idx, 10) > 0 ? 'right' : 'left'}
-      >
-        {name}
-      </TableCell>
-    ))
+    const rows = map(headItems, (name, idx) => {
+      const key = `tableCell-${name}-${idx}`
+      return (
+        <TableCell
+          key={key}
+          align={idx > 0 ? 'right' : 'left'}
+        >
+          {name}
+        </TableCell>
+      )
+    })
 
     return (
       <TableHead>

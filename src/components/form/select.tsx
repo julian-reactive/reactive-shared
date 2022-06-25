@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useEffect, useState } from 'react'
-import _ from 'lodash'
+import isArray from 'lodash/isArray'
+import isEqual from 'lodash/isEqual'
 
 // Material Components
 import InputLabel from '@mui/material/InputLabel'
@@ -24,7 +25,7 @@ const SharedSelect: React.FC<BuildInputProps> = ({
     label,
     helpText,
     required,
-    items,
+    items = [],
     onChange,
     disabled,
     value
@@ -32,7 +33,7 @@ const SharedSelect: React.FC<BuildInputProps> = ({
 }) => {
   const previousValue = usePreviousValue(value)
 
-  const [inputValue, setInputValue] = useState(field.value || value || '')
+  const [inputValue, setInputValue] = useState('')
 
   const handleOnChange = useCallback((evt: SelectChangeEvent) => {
     const { value } = evt.target
@@ -40,14 +41,12 @@ const SharedSelect: React.FC<BuildInputProps> = ({
     onChangeField(value)
     setInputValue(value)
 
-    if (onChange) {
+    if (typeof onChange === 'function') {
       onChange(value)
     }
   }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
   const renderOptions = useMemo(() => {
-    if (items == null) return null
-
     return items.map(({ label, value, disabled = false }) => {
       const renderLabel = typeof label === 'function' ? label() : label
       return (
@@ -57,18 +56,22 @@ const SharedSelect: React.FC<BuildInputProps> = ({
   }, [items])
 
   const renderValue = useCallback((selected: any) => {
-    const item = items!.find(({ value }) => value === selected)
+    if (items.length === 0) return ''
 
-    return typeof item!.label === 'function' ? item!.label() : item!.label
+    const item = items.find(({ value }) => value === selected)
+
+    if (item?.label === undefined) return ''
+
+    return typeof item.label === 'function' ? item.label() : item.label
   }, [items])
 
   const renderHelpText = useMemo(() => {
     if (error != null) {
-      const message = _.isArray(error) ? error[0].message : error.message
+      const message = isArray(error) ? error[0].message : error.message
       return (<FormHelperText>{message}</FormHelperText>)
     }
 
-    if (helpText) {
+    if (helpText !== undefined) {
       return (<FormHelperText>{helpText}</FormHelperText>)
     }
   }, [error, helpText])
@@ -76,7 +79,7 @@ const SharedSelect: React.FC<BuildInputProps> = ({
   const renderLabel = useLabel(label)
 
   useEffect(() => {
-    if (!_.isEqual(previousValue, value)) {
+    if (!isEqual(previousValue, value)) {
       onChangeField(value)
       setInputValue(value)
     }

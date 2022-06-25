@@ -43,7 +43,7 @@ export interface InputProps {
   multiple?: boolean
   required?: boolean
   rows?: number
-  items?: Array<{ label: string | (() => string), value: string | number, disabled?: boolean }>,
+  items?: Array<{ label: string | (() => string), value: string | number, disabled?: boolean }>
   tooltip?: string
   component?: any
   onChange?: any
@@ -52,12 +52,14 @@ export interface InputProps {
   showInput?: boolean
 }
 
+export interface RenderProps {
+  field: ControllerRenderProps<{ [p: string]: any }, string>
+  fieldState: ControllerFieldState
+  formState: UseFormStateReturn<{ [p: string]: any }>
+}
+
 export interface BuildInputProps {
-  renderProps: {
-    field: ControllerRenderProps<{ [p: string]: any }, string>,
-    fieldState: ControllerFieldState
-    formState: UseFormStateReturn<{ [p: string]: any }>
-  }
+  renderProps: RenderProps
   inputProps: InputProps
   useFormProps?: any
 }
@@ -114,7 +116,7 @@ const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps):
     case 'selectMultiple':
       return (<SelectMultiple {...props} />)
     case 'component':
-      if (props.inputProps.component) return props.inputProps.component(props)
+      if (props.inputProps.component !== undefined) return props.inputProps.component(props)
 
       return (<span>______NO_COMPONENT______</span>)
     default:

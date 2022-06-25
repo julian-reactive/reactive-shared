@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useEffect, useState } from 'react'
-import _ from 'lodash'
+import isEqual from 'lodash/isEqual'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -32,13 +32,13 @@ const SharedCheckbox: React.FC<BuildInputProps> = ({
 
   const [checked, setChecked] = useState((field.value !== undefined && field.value) || value || false)
 
-  const handleChange = useCallback((evt) => {
+  const handleChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
     const { checked } = evt.target
 
     setChecked(checked)
     onChangeField(checked)
 
-    if (onChange) {
+    if (typeof onChange === 'function') {
       onChange(checked)
     }
   }, [onChange]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -51,7 +51,7 @@ const SharedCheckbox: React.FC<BuildInputProps> = ({
         </FormHelperText>
       )
     }
-    if (helpText) {
+    if (helpText !== undefined) {
       return (
         <FormHelperText>
           {helpText}
@@ -63,7 +63,7 @@ const SharedCheckbox: React.FC<BuildInputProps> = ({
   const renderLabel = useLabel(label)
 
   useEffect(() => {
-    if (!_.isEqual(previousValue, value)) {
+    if (!isEqual(previousValue, value)) {
       setChecked(value)
       onChangeField(value)
     }

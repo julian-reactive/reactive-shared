@@ -64,17 +64,21 @@ import DefaultDialog from './defaultDialog'
  * };
  * ```
  */
+
+export interface DialogOptionProps {
+  icon: ReactElement
+  text: ReactElement
+  to?: string | ((selectedItem: SelectedItemProps) => void)
+  onConfirm?: (selectedItem: SelectedItemProps) => void
+  // Component?: (props: { item: SelectedItemProps, onClose: () => void }) => ReactElement
+  Component?: React.ComponentType<{ item: SelectedItemProps, onClose: () => void }>
+  disabled?: boolean | ((selectedItem: SelectedItemProps) => boolean)
+  shouldRender?: (selectedItem: SelectedItemProps) => boolean
+  // Component: ItemComponentProps
+}
+
 export interface DialogOptionsProps {
-  [key: string]: {
-    icon: ReactElement
-    text: ReactElement
-    to?: string | ((selectedItem: SelectedItemProps) => void)
-    onConfirm?: (selectedItem: SelectedItemProps) => void
-    Component?: NamedExoticComponent<any> | ((props: { item: SelectedItemProps, onClose: () => void }) => ReactElement)
-    disabled?: boolean | ((selectedItem: SelectedItemProps) => boolean)
-    shouldRender?: (selectedItem: SelectedItemProps) => boolean
-    // Component: ItemComponentProps
-  }
+  [key: string]: DialogOptionProps
 }
 
 /**
@@ -147,14 +151,14 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   const [selectedItem, setSelectedItem] = useState<SelectedItemProps | undefined>(undefined)
 
   const queryParams = useMemo(() => {
-    if (!searchParams) return useQueryParams
+    if (searchParams !== undefined) return useQueryParams
 
     return { params: searchParams }
   }, [useQueryParams, searchParams])
 
   const { loading: isLoading, data: queryData, error } = useQuery(queryParams)
 
-  const handleSelectItem = useCallback((selectedItem) => () => {
+  const handleSelectItem = useCallback((selectedItem: any) => () => {
     if ((dialogOptions != null) || (DialogComponent != null)) {
       setSelectedItem(selectedItem)
     }
@@ -163,7 +167,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   const handleOnClose = useCallback(() => setSelectedItem(undefined), [])
 
   const renderButton = useMemo(() => {
-    if (!addRoute) return null
+    if (addRoute === undefined) return null
 
     return (
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1, p: 1, pt: 2, pb: 2 }}>
@@ -174,7 +178,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
           variant='contained'
         >
           <AddIcon />
-          {onlyText(addText || 'GENERAL.ADD')}
+          {onlyText(addText ?? 'GENERAL.ADD')}
         </Button>
       </Box>
     )
@@ -189,19 +193,19 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
           dialogFullScreen={dialogFullScreen}
           onClose={handleOnClose}
           selectedItem={selectedItem}
-          title={selectedItem.name || onlyText('FORM.LABEL.OPTIONS')}
+          title={selectedItem.name ?? onlyText('FORM.LABEL.OPTIONS')}
         />
       )
     }
 
-    if (dialogOptions) {
+    if (dialogOptions !== undefined) {
       return (
         <DefaultDialog
           dialogFullScreen={dialogFullScreen}
           onClose={handleOnClose}
           options={dialogOptions}
           selectedItem={selectedItem}
-          title={selectedItem.name || onlyText('FORM.LABEL.OPTIONS')}
+          title={selectedItem.name ?? onlyText('FORM.LABEL.OPTIONS')}
         />
       )
     }
@@ -216,7 +220,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   )
 
   const renderList = useMemo(() => {
-    if (!queryData) return null
+    if (queryData === undefined) return null
 
     const { data } = queryData
 
@@ -268,11 +272,11 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   )
 
   const renderLoading = useMemo(() => {
-    if (loading || isLoading) return <Loading backdrop />
+    if (loading === true || isLoading === true) return <Loading backdrop />
   }, [loading, isLoading])
 
   const renderSearch = useMemo(() => {
-    if (!SearchComponent) return null
+    if (SearchComponent === undefined) return null
 
     return (
       <SearchComponent onSearch={setSearchParams} />

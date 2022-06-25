@@ -1,5 +1,5 @@
 // Libraries
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import map from 'lodash/map'
 // Import isEmpty from 'lodash/isEmpty'
@@ -26,9 +26,10 @@ import { Intl } from '../../utils'
 import { sxCloseDialogButton } from './sx'
 
 // Interface
-import { SelectedItemProps, DialogOptionsProps } from './index'
+import { SelectedItemProps, DialogOptionsProps, DialogOptionProps } from './index'
 
-export interface DefaultDialogProps {
+// #region
+interface DefaultDialogProps {
   title: string
   onClose: () => void
   options: DialogOptionsProps
@@ -36,33 +37,39 @@ export interface DefaultDialogProps {
   dialogFullScreen: boolean
 }
 
+// type ActionToConfirmProps = ((selectedItem: any) => void) | undefined
+
+type HandleClickProps = (options: DialogOptionProps, key: string) => () => void
+
+// #endregion
+
 const DefaultDialogComponent: React.FC<DefaultDialogProps> = ({ options, title, onClose, selectedItem, dialogFullScreen }) => {
   const navigate = useNavigate()
   const [showRender, setShowRender] = useState('renderOptionList')
   const [selectedOption, setSelectedOption] = useState('')
-  const actionToConfirm = React.useRef<any>(null)
+  const actionToConfirm = useRef<any>()
 
-  const handleClick = useCallback(({ to = null, onConfirm = null, Component = null }, key) => () => {
+  const handleClick = useCallback<HandleClickProps>(({ to, onConfirm, Component }, key) => () => {
     setSelectedOption(key)
 
-    if (typeof to === 'string') {
+    if (typeof to === 'string' && to !== '') {
       navigate(`${to}/${selectedItem.id}`)
     } else if (typeof to === 'function') {
       to(selectedItem)
     }
 
-    if (Component) {
+    if (Component !== undefined) {
       setShowRender('renderItemComponent')
     }
 
-    if (onConfirm) {
+    if (onConfirm !== undefined) {
       actionToConfirm.current = onConfirm
       setShowRender('renderConfirmBox')
     }
   }, [navigate, selectedItem.id])
 
   const handleConfirmClick = useCallback(async () => {
-    if (actionToConfirm && actionToConfirm.current) {
+    if (typeof actionToConfirm.current === 'function') {
       await actionToConfirm.current(selectedItem)
     }
     onClose()
@@ -120,11 +127,11 @@ const DefaultDialogComponent: React.FC<DefaultDialogProps> = ({ options, title, 
   }, [handleConfirmClick])
 
   const renderItemComponent = React.useMemo(() => {
-    if (!selectedOption) return null
+    if (selectedOption === '') return null
 
     const { Component } = options[selectedOption]
 
-    if (Component == null) return null
+    if (Component === undefined) return undefined
 
     return <Component item={selectedItem} onClose={onClose} />
   }, [options, selectedItem, selectedOption, onClose])

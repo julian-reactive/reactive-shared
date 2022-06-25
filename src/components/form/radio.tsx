@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useEffect, useState } from 'react'
-import _ from 'lodash'
+import isEqual from 'lodash/isEqual'
 
 // Material Components
 import Radio from '@mui/material/Radio'
@@ -31,14 +31,14 @@ const SharedRadio: React.FC<BuildInputProps> = ({
 }) => {
   const previousValue = usePreviousValue(value)
 
-  const [inputValue, setInputValue] = useState(field.value || value || '')
+  const [inputValue, setInputValue] = useState('')
 
-  const handleChangeInputValue = useCallback((evt) => {
+  const handleChangeInputValue = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = evt.target
     onChangeField(value)
     setInputValue(value)
 
-    if (onChange) {
+    if (typeof onChange === 'function') {
       onChange(value)
     }
   }, [onChange]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -62,7 +62,7 @@ const SharedRadio: React.FC<BuildInputProps> = ({
         </FormHelperText>
       )
     }
-    if (helpText) {
+    if (helpText !== undefined) {
       return (
         <FormHelperText>
           {helpText}
@@ -74,7 +74,7 @@ const SharedRadio: React.FC<BuildInputProps> = ({
   const renderLabel = useLabel(label)
 
   useEffect(() => {
-    if (!_.isEqual(previousValue, value)) {
+    if (!isEqual(previousValue, value)) {
       onChangeField(value)
       setInputValue(value)
     }

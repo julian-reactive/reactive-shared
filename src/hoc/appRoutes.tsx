@@ -5,7 +5,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom'
 import Box from '@mui/material/Box'
 
 import { NotFound } from '../components'
-import AppBar, { MenuItemsProps } from '../components/app-bar'
+import AppBar from '../components/app-bar'
 import { getLocalStorageValue } from '../utils'
 
 interface RouteProp {
@@ -21,7 +21,7 @@ interface AppRoutesProps {
   excluded?: string[]
 }
 
-const logged = getLocalStorageValue('token')
+const logged = Boolean(getLocalStorageValue('token'))
 
 const AppRoutesContainer: React.FC<AppRoutesProps> = ({ UserEntity, routes, MainAppProvider, mainAppHook }) => {
   const [authRoutes] = useState(() => {

@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
-import _ from 'lodash'
+import isEqual from 'lodash/isEqual'
+import isArray from 'lodash/isArray'
 
 // Material Components
 import InputLabel from '@mui/material/InputLabel'
@@ -28,7 +29,7 @@ const SharedSelectMultiple: React.FC<BuildInputProps> = ({
     label,
     helpText,
     required,
-    items,
+    items = [],
     onChange,
     disabled,
     value
@@ -44,14 +45,12 @@ const SharedSelectMultiple: React.FC<BuildInputProps> = ({
     setInputValue(value)
     onChangeField(value)
 
-    if (onChange) {
+    if (typeof onChange === 'function') {
       onChange(value)
     }
   }, [onChange])// eslint-disable-line react-hooks/exhaustive-deps
 
   const renderOptions = useMemo(() => {
-    if (items == null) return null
-
     return items.map(({ label, value }) => {
       const checked = inputValue.includes(value)
       const renderLabel = typeof label === 'function' ? label() : label
@@ -68,7 +67,7 @@ const SharedSelectMultiple: React.FC<BuildInputProps> = ({
   const renderValue = useCallback((selected: any) => {
     return (
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-        {items!
+        {items
           .filter(({ value }) => selected.includes(value))
           .map(({ label }: { label: string | (() => string) }) => {
             const renderLabel = typeof label === 'function' ? label() : label
@@ -82,11 +81,11 @@ const SharedSelectMultiple: React.FC<BuildInputProps> = ({
 
   const renderHelpText = useMemo(() => {
     if (error != null) {
-      const message = _.isArray(error) ? error[0].message : error.message
+      const message = isArray(error) ? error[0].message : error.message
       return (<FormHelperText>{message}</FormHelperText>)
     }
 
-    if (helpText) {
+    if (helpText !== undefined) {
       return (<FormHelperText>{helpText}</FormHelperText>)
     }
   }, [error, helpText])
@@ -94,7 +93,7 @@ const SharedSelectMultiple: React.FC<BuildInputProps> = ({
   const renderLabel = useLabel(label)
 
   useEffect(() => {
-    if (!_.isEqual(previousValue, value)) {
+    if (!isEqual(previousValue, value)) {
       onChangeField(value)
       setInputValue(value)
     }

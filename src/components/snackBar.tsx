@@ -35,7 +35,7 @@ const SnackBarComponent: React.FC = () => {
   ), [handleClose])
 
   const renderMessage = useMemo(() => {
-    if (!snackBarMessage) return undefined
+    if (snackBarMessage === undefined) return undefined
 
     const alertMessage = typeof snackBarMessage === 'object' ? snackBarMessage.message : snackBarMessage
     const alertSeverity = typeof snackBarMessage === 'object' ? snackBarMessage.severity : 'success'

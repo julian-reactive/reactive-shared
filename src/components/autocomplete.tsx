@@ -33,7 +33,13 @@ export interface AutocompleteProps{
   size?: 'small' | 'medium'
 }
 
-const defaultUseQuery = () => {
+type DefaultUseQueryProps = () => {
+  isLoading: boolean
+  data: any
+  refetch: () => void
+}
+
+const defaultUseQuery: DefaultUseQueryProps = () => {
   return {
     isLoading: false,
     data: [],
@@ -57,7 +63,7 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
   const { label, helpText, incomingValue } = inputProps
 
   const [autocompleteValue, setAutocompleteValue] = useState(fieldValue)
-  const [inputValue, setInputValue] = useState(inputProps.value || '')
+  const [inputValue, setInputValue] = useState('')
   const [inputOptions, setInputOptions] = useState(options)
 
   const { isLoading, data, refetch } = useQuery({ params: { key: inputValue } }, { enabled: false })
@@ -79,7 +85,7 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
           startAdornment: startAdornment,
           endAdornment: (
             <>
-              {isLoading && (<CircularProgress color='inherit' size={20} />)}
+              {Boolean(isLoading) && (<CircularProgress color='inherit' size={20} />)}
               {params.InputProps?.endAdornment}
             </>
           )
@@ -90,17 +96,19 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
     )
   }, [startAdornment, error, renderLabel, helpText, isLoading])
 
-  const handleChange = useCallback((_, value) => {
+  const handleChange = useCallback((evt: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const { value } = evt.target
     onChangeField(value)
     setAutocompleteValue(value)
-    if (onChange) {
+
+    if (typeof onChange === 'function') {
       onChange(value)
     }
   }, [onChange])// eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleInputChange = useCallback((_, value) => {
+  const handleInputChange = useCallback((evt: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const { value } = evt.target
     setInputValue(value)
-
     onChangeField(value)
 
     if (value.length < 2) {
@@ -122,7 +130,7 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
       return undefined
     }
 
-    if (data?.data?.length) {
+    if (data?.data?.length > 0) {
       setInputOptions(data.data)
     }
   }, [data, useQuery])

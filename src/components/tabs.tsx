@@ -7,7 +7,7 @@ import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 
-const a11yProps = (index: string) => ({
+const a11yProps = (index: string): {id: string, 'aria-controls': string} => ({
   id: `simple-tab-${index}`,
   'aria-controls': `simple-tabpanel-${index}`
 })
@@ -43,8 +43,8 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...other })
   )
 }
 
-const AppTabsContainer: React.FC<AppTabsProps> = ({ value, tabsHeader, tabsBody }) => {
-  const [tabValue, setTabValue] = useState(value || 0)
+const AppTabsContainer: React.FC<AppTabsProps> = ({ value = 0, tabsHeader, tabsBody }) => {
+  const [tabValue, setTabValue] = useState(value)
 
   const handleChange = useCallback((event: React.SyntheticEvent, newValue: string) => setTabValue(parseInt(newValue, 10)), [])
 

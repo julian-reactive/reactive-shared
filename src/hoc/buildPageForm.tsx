@@ -22,6 +22,7 @@ import { useAppContext } from './appContext'
 import { CreateForm, BuildFormProps, Loading, InputsFormConfigProps } from '../components'
 import { HookResultProps, onlyText } from '../utils'
 
+// #region
 // Interfaces
 interface AnyParams { [key: string]: any }
 export type UseMutateActionProps = (id: number | string, useMutateOptions: UseMutationOptions) => HookResultProps
@@ -52,10 +53,11 @@ export interface BuildPageFormProps {
   buildFormProps: BuildFormProps
   actions: ActionsProps
 }
+// #endregion
 
 const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
   entity,
-  pageTitle,
+  pageTitle = '',
   buildFormProps: {
     defaultSuccessMessage = true,
     noBackButton = false,
@@ -88,8 +90,8 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
     ...useQueryOptions
   })
 
-  const handleSubmit = useCallback((formData) => {
-    if (id) {
+  const handleSubmit = useCallback((formData: {[k: string]: any}) => {
+    if (id !== '') {
       formData.id = id
     }
 
@@ -116,7 +118,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
 
     if (!dataSet.current) {
       each(inputsFormConfig, fieldProps => {
-        if (data[fieldProps.name]) {
+        if (data[fieldProps.name] !== undefined) {
           fieldProps.value = data[fieldProps.name]
           fieldProps.disabled = false
         }
@@ -133,24 +135,30 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
     return inputsFormConfig
   }, [queryData, inputsFormConfig, afterQuery])
 
+  const confirmButtonText = useMemo(() => {
+    if (confirmButtonLangkey !== undefined) return confirmButtonLangkey
+    if (id !== '') return 'GENERAL.EDIT'
+    return 'GENERAL.ADD'
+  }, [confirmButtonLangkey, id])
+
   /** set title */
   useEffect(() => {
-    if (pageTitle) {
+    if (pageTitle !== '') {
       setPageTitle(onlyText(pageTitle))
-    } else {
-      const title = `${entity!.toLocaleUpperCase()}.${id ? 'EDIT' : 'ADD'}.TITLE`
+    } else if (entity !== undefined) {
+      const title = `${entity.toLocaleUpperCase()}.${id !== '' ? 'EDIT' : 'ADD'}.TITLE`
       setPageTitle(onlyText(title))
     }
   }, [id, setPageTitle, entity, pageTitle])
 
   /** when a mutation is made */
   useEffect(() => {
-    if (isSuccess && mutateData?.status === 'success') {
+    if (isSuccess === true && mutateData?.status === 'success') {
       if (defaultSuccessMessage) {
         setSnackBarMessage(onlyText('GENERAL.ADD_SUCCESS'))
       }
 
-      if (!error && !mutateData?.data) {
+      if (error !== null && mutateData?.data !== undefined) {
         throw new Error('something is wrong with response format')
       }
 
@@ -164,7 +172,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
   [isSuccess, error, mutateData, id, afterMutate, setSnackBarMessage, defaultSuccessMessage]
   )
 
-  if (id && (isLoading || isEmpty(queryData))) {
+  if (id !== '' && (isLoading === true || isEmpty(queryData))) {
     return <Loading backdrop />
   }
 
@@ -175,7 +183,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
           loading={adding}
           disabled={disabled}
           noBackButton={noBackButton}
-          confirmButtonLangkey={confirmButtonLangkey || (id ? 'GENERAL.EDIT' : 'GENERAL.ADD')}
+          confirmButtonLangkey={confirmButtonText}
           inputsFormConfig={formData}
           responseErrors={errors}
           onSubmit={handleSubmit}

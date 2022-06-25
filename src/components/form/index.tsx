@@ -6,7 +6,10 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { object } from 'yup'
 
 // Lodash
-import _ from 'lodash'
+import reduce from 'lodash/reduce'
+import map from 'lodash/map'
+import isEmpty from 'lodash/isEmpty'
+import each from 'lodash/each'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -18,7 +21,9 @@ import Tooltip from '@mui/material/Tooltip'
 import { Intl, onlyText } from '../../utils'
 
 // Build Input
-import BuildInput, { InputProps } from './buildInput'
+import BuildInput, { InputProps, RenderProps } from './buildInput'
+
+// #region
 
 // Types
 interface tAnyObject {
@@ -43,9 +48,13 @@ export interface BuildFormProps {
   confirmButtonLangkey?: string
   inputsFormConfig: InputsFormConfigProps
   responseErrors?: { [key: string]: string }
-  onSubmit?: (arg0: tAnyObject) => void
+  onSubmit: (arg0: tAnyObject) => void
   defaultSuccessMessage?: boolean
 }
+
+type RenderBuildInputProps = (renderPros: RenderProps, inputProps: InputProps) => any
+
+// #endregion
 
 const CreateFormContainer: React.FC<BuildFormProps> = ({
   loading,
@@ -61,7 +70,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   const formValues = useRef<any>()
 
   const [validationSchema]: [any, any] = useState(() => {
-    const fields: { [key: string]: any } = _.reduce(inputsFormConfig, (prev, { name, yupValidation }) => ({
+    const fields: { [key: string]: any } = reduce(inputsFormConfig, (prev, { name, yupValidation }) => ({
       ...prev,
       [name]: yupValidation
     }), {})
@@ -70,7 +79,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   })
 
   const handleBackAction = useCallback(() => {
-    if (backTo) {
+    if (typeof backTo === 'string') {
       navigate(backTo)
     } else {
       navigate(-1)
@@ -88,14 +97,14 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     formValues.current = useFormProps.getValues() // debug form values in component
   }
 
-  const renderBuildInput = useCallback((renderProps, inputProps) => {
+  const renderBuildInput = useCallback<RenderBuildInputProps>((renderProps, inputProps) => {
     return (
       <BuildInput renderProps={renderProps} inputProps={inputProps} useFormProps={useFormProps} />
     )
   }, [useFormProps])
 
   const buildForm = useMemo(() => {
-    return _.map(inputsFormConfig, ({
+    return map(inputsFormConfig, ({
       showInput = true,
       tooltip,
       parentBox = {},
@@ -115,7 +124,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
         />
       )
 
-      if (tooltip) {
+      if (tooltip !== undefined) {
         return (
           <Box key={key} mt={1} {...parentBox}>
             <Tooltip title={onlyText(tooltip)} arrow placement='top'>
@@ -155,22 +164,24 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   }, [noBackButton, handleBackAction, loading])
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development' && !_.isEmpty(useFormProps?.formState?.errors)) {
+    if (process.env.NODE_ENV === 'development' && !isEmpty(useFormProps?.formState?.errors)) {
       console.log('useFormProps', useFormProps.getValues())
       console.log('errors in form', useFormProps.formState.errors)
     }
   }, [useFormProps])
 
   useEffect(() => {
-    if (!_.isEmpty(responseErrors)) {
-      _.each(responseErrors, (error, name) => {
+    if (!isEmpty(responseErrors)) {
+      each(responseErrors, (error, name) => {
         setError(name, { type: 'error', message: onlyText(`SERVER.VALIDATION.ERROR.${error[0]}`) })
       })
     }
   }, [responseErrors, setError])
 
+  const isButtonSubmitDisabled = Boolean(loading) || Boolean(disabled) || !useFormProps.formState.isDirty
+
   return (
-    <form autoComplete='off' data-testid='form' onSubmit={handleSubmit(onSubmit!)}>
+    <form autoComplete='off' data-testid='form' onSubmit={handleSubmit(onSubmit)}>
       <Box>
         {buildForm}
       </Box>
@@ -185,11 +196,11 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
         <Button
           color='primary'
           disableElevation
-          disabled={loading || disabled || !useFormProps.formState.isDirty}
+          disabled={isButtonSubmitDisabled}
           type='submit'
           variant='contained'
         >
-          {loading &&
+          {Boolean(loading) &&
             <CircularProgress
               data-testid='circular-progress'
               size={20}
