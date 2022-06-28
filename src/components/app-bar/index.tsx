@@ -22,7 +22,8 @@ import { sxAppBar, sxLinkHome } from './sx'
 
 // Icon
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const icon = require('../../assets/logo-icon.png').default
+// const icon = require('../../assets/logo-icon.png').default
+const icon = ''
 // import {OverridableComponent} from "@mui/material/OverridableComponent";
 // import {SvgIconTypeMap} from "@mui/material";
 

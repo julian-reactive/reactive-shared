@@ -14,7 +14,7 @@ const a11yProps = (index: string): {id: string, 'aria-controls': string} => ({
 
 // Interfaces
 interface TabPanelProps {
-  children?: React.ReactNode
+  children: any
   index: number
   value: number
 }

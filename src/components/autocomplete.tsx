@@ -1,9 +1,9 @@
-import React, { useCallback, useRef, useState, useEffect } from 'react'
+import React, { useCallback, useRef, useState, useEffect, SyntheticEvent } from 'react'
 import debounce from 'lodash/debounce'
 import get from 'lodash/get'
 
 // Material
-import MaterialAutocomplete from '@mui/material/Autocomplete'
+import MaterialAutocomplete, { AutocompleteChangeDetails, AutocompleteChangeReason, AutocompleteInputChangeReason } from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 import CircularProgress from '@mui/material/CircularProgress'
 
@@ -38,6 +38,9 @@ type DefaultUseQueryProps = () => {
   data: any
   refetch: () => void
 }
+
+type HandleInputChangeProps = (event: React.SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => void
+type HandleChangeProps = (event: SyntheticEvent<Element, Event>, value: any, reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<any> | undefined) => void
 
 const defaultUseQuery: DefaultUseQueryProps = () => {
   return {
@@ -96,8 +99,7 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
     )
   }, [startAdornment, error, renderLabel, helpText, isLoading])
 
-  const handleChange = useCallback((evt: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    const { value } = evt.target
+  const handleChange = useCallback<HandleChangeProps>((_evt, value) => {
     onChangeField(value)
     setAutocompleteValue(value)
 
@@ -106,8 +108,7 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
     }
   }, [onChange])// eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleInputChange = useCallback((evt: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    const { value } = evt.target
+  const handleInputChange = useCallback<HandleInputChangeProps>((_evt, value) => {
     setInputValue(value)
     onChangeField(value)
 
