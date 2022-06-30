@@ -19,14 +19,14 @@ import { AxiosResponse } from 'axios'
 import { api } from './api'
 
 // Interfaces
-export type HookResultProps = UseMutationResult<AxiosResponse, unknown, iParams | undefined> |
-UseMutationResult<AxiosResponse, unknown, iParams> |
-UseQueryResult<AxiosResponse> | (() => void)
-
-export interface iParams {
+export interface ParamsProps {
   id?: string
   [key: string]: any
 }
+
+export type HookResultProps = UseMutationResult<AxiosResponse, unknown, ParamsProps | undefined> |
+UseMutationResult<AxiosResponse, unknown, ParamsProps> |
+UseQueryResult<AxiosResponse> | (() => void)
 
 interface ObjectStringProps {
   [key: string]: any
@@ -155,22 +155,22 @@ export const useCreateApi: UseCreateApiProps = (endpoint, additionalEndpoints) =
     const { refetchQueries = [] } = options
     const onSuccess = onSuccessMutate(client, [endpoint, ...refetchQueries])
 
-    if (id !== null) return useMutation(async (params: iParams) => await api.put(`${endpoint}/${id}`, params), { ...options, onSuccess })
+    if (id !== null) return useMutation(async (params: ParamsProps) => await api.put(`${endpoint}/${id}`, params), { ...options, onSuccess })
 
-    return useMutation(async (params: iParams) => await api.post(endpoint, params), { ...options, onSuccess })
+    return useMutation(async (params: ParamsProps) => await api.post(endpoint, params), { ...options, onSuccess })
   }
 
   const useDelete: UseDeleteProps = (options = {}) => {
     const { refetchQueries = [] } = options
     const onSuccess = onSuccessMutate(client, [endpoint, ...refetchQueries])
 
-    return useMutation(async ({ id, ...options }: iParams) => await api.delete(`${endpoint}/${id ?? ''}`, options), { onSuccess, ...options })
+    return useMutation(async ({ id, ...options }: ParamsProps) => await api.delete(`${endpoint}/${id ?? ''}`, options), { onSuccess, ...options })
   }
 
   /**
    * @typedef {Object} params - options needed for make requests params are exclusive, id or params. If need to search by id too, insert id on params
    * @param {string | number | undefined} id - id of record
-   * @param {iParams} params - params for search
+   * @param {ParamsProps} params - params for search
    * @param {boolean} idRequired - if the request needs id as mandatory
    * @param {boolean} paramsRequired - if the request needs id as mandatory
    * @param {*} options :options of react-query useQuery
