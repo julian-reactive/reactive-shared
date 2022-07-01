@@ -8,9 +8,9 @@ module.exports = {
   output: {
     clean: true,
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].bundle.js',
+    filename: '[name].js',
     libraryTarget: 'umd',
-    library: 'Shared',
+    library: 'reactive-shared',
     umdNamedDefine: true
   },
   resolve: {
@@ -37,10 +37,10 @@ module.exports = {
     ]
   },
   optimization: {
-    runtimeChunk: 'single',
-    splitChunks: {
-      chunks: 'all',
-      usedExports: true
-    }
+    // runtimeChunk: 'single',
+    // splitChunks: {
+    //   chunks: 'all',
+    //   usedExports: true
+    // }
   }
 }
