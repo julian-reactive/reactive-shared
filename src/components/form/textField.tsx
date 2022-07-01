@@ -1,6 +1,7 @@
 // Libraries
 import React, { useMemo, useCallback, useEffect, useState } from 'react'
-import _ from 'lodash'
+import get from 'lodash/get'
+import isEqual from 'lodash/isEqual'
 
 // Material Components
 import { red } from '@mui/material/colors'
@@ -76,7 +77,7 @@ const SharedTextField: React.FC<BuildInputProps> = ({
   const renderLabel = useLabel(label)
 
   useEffect(() => {
-    if (!_.isEqual(previousValue, value)) {
+    if (!isEqual(previousValue, value)) {
       onChangeField(value)
       setInputValue(value)
     }
@@ -93,7 +94,7 @@ const SharedTextField: React.FC<BuildInputProps> = ({
       sx={{ ...sxTextField, ...sx }}
       label={renderLabel}
       error={Boolean(error)}
-      helperText={_.get(error, 'message', helpText)}
+      helperText={get(error, 'message', helpText)}
       InputProps={{
         ...InputProps,
         startAdornment: renderStartAdornment,

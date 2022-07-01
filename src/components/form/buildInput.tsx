@@ -6,7 +6,7 @@ import {
 // Material Components
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
-import { SvgIconTypeMap } from '@mui/material'
+import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
 import { SxProps } from '@mui/system'
 
