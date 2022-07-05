@@ -12,7 +12,6 @@
     "url": "https://github.com/julian-reactive/reactive-shared/issues"
   },
   "homepage": "https://github.com/julian-reactive/reactive-shared#readme",
-  "private": true,
   "ts-standard": {
     "project": "./tsconfig.json",
     "ignore": [
