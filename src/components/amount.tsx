@@ -17,10 +17,12 @@ interface AmountComponentProps {
   onPlus: (value: number) => void
   onMinus: (value: number) => void
   maxValue: number
+  minValue?: number
+  initialValue?: number
 }
 
-const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxValue }) => {
-  const [amount, setAmount] = useState(1)
+const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxValue, minValue = 0, initialValue = 0 }) => {
+  const [amount, setAmount] = useState(initialValue)
 
   const handlePlus = useCallback(() => {
     setAmount(value => {
@@ -34,16 +36,16 @@ const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxV
 
   const handleMinus = useCallback(() => {
     setAmount(value => {
-      if (amount > 1) {
+      if (amount > minValue) {
         value = value - 1
         onMinus(value)
       }
       return value
     })
-  }, [amount, onMinus])
+  }, [onMinus, amount, minValue])
 
   return (
-    <Box sx={{ my: 2, alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
+    <Box sx={{display:'flex', justifyContent:'center', py: 1}}>
       <Fab
         aria-label='remove 1 unit amount'
         color='secondary'
@@ -53,15 +55,14 @@ const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxV
         <RemoveIcon fontSize='small' />
       </Fab>
 
-      <Box sx={{ px: 1, width: '30%' }}>
-        <TextField
-          label={onlyText('FORM.LABEL.AMOUNT')}
-          variant='outlined'
-          value={amount}
-          disabled
-          size='small'
-        />
-      </Box>
+      <TextField
+        sx={{ px: 1, width: '40%' }}
+        label={onlyText('FORM.LABEL.AMOUNT')}
+        variant="outlined"
+        value={amount}
+        disabled
+        size='small'
+      />
 
       <Fab
         aria-label='add 1 unit amount'
@@ -72,7 +73,6 @@ const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxV
         <AddIcon fontSize='small' />
       </Fab>
     </Box>
-
   )
 }
 

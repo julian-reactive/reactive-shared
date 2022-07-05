@@ -40,7 +40,7 @@ module.exports = {
     //   include: /\.min\.js$/
     // }),
     new webpack.ProgressPlugin(),
-    new BundleAnalyzerPlugin()
+    // new BundleAnalyzerPlugin() /// this create a report about how is distributed components
   ],
   module: {
     rules: [
