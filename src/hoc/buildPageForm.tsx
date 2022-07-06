@@ -10,6 +10,7 @@ import {
 import { useParams } from 'react-router-dom'
 import isEmpty from 'lodash/isEmpty'
 import each from 'lodash/each'
+import cloneDeep from 'lodash/cloneDeep'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -125,6 +126,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
       })
     }
     dataSet.current = true
+    console.log('afterQuery' )
 
     if ((afterQuery != null) && !afterQueryCalled.current) {
       afterQuery(inputsFormConfig, data)
@@ -132,7 +134,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
 
     afterQueryCalled.current = true
 
-    return inputsFormConfig
+    return cloneDeep(inputsFormConfig)
   }, [queryData, inputsFormConfig, afterQuery])
 
   const confirmButtonText = useMemo(() => {

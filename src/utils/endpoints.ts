@@ -83,10 +83,10 @@ const useCustomQuery: UseCustomQueryProps = (name, endpoint) => (queryParams = {
   const { id = null, params = {} } = queryParams
 
   if (id !== null) {
-    return useReactQuery(name, async () => await api.get(`${endpoint}/${id}`), options)
+    return useReactQuery(name, () => api.get(`${endpoint}/${id}`), options)
   }
 
-  return useReactQuery(name, async () => await api.get(endpoint, { params }), options)
+  return useReactQuery(name, () => api.get(endpoint, { params }), options)
 }
 
 const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null, options = {}) => {
@@ -94,9 +94,9 @@ const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null
 
   const onSuccess = onSuccessMutate(useQueryClient(), [endpoint, ...refetchQueries])
 
-  return useMutation(async (params) => {
-    if (id) return await api.put(`${endpoint}/${id}`, params)
-    return await api.post(endpoint, params)
+  return useMutation((params) => {
+    if (id) return api.put(`${endpoint}/${id}`, params)
+    return api.post(endpoint, params)
   }, { onSuccess, ...options })
 }
 
@@ -141,10 +141,10 @@ const useSetAdditionalEndpoints: UseSetAdditionalEndpointsProps = ({ hooks, addi
  * if `additionalEndpoints` comes, must be an array of {name, endpoint, type} and will be added as ´use${upperFirst(name)}´ hook
  *
  * @param {string} endpoint - endpoint url
- * @param {AdditionalEndpointsProps[]} additionalEndpoints - set of additional endpoints
+ * @param {AdditionalEndpointsProps[] | undefined} additionalEndpoints - set of additional endpoints
  * @returns react-query hooks for insert in entity context
  */
-export const useCreateApi: UseCreateApiProps = (endpoint, additionalEndpoints) => {
+export const useCreateApi: UseCreateApiProps = (endpoint: string, additionalEndpoints: AdditionalEndpointsProps[] | undefined) => {
   if (api === undefined) {
     throw new Error('No Api configured')
   }
@@ -153,20 +153,20 @@ export const useCreateApi: UseCreateApiProps = (endpoint, additionalEndpoints) =
 
   const entity = capitalize(endpoint)
 
-  const useMutate: UseMutateProps = async (id = null, options = {}) => {
+  const useMutate: UseMutateProps = (id = null, options = {}) => {
     const { refetchQueries = [] } = options
     const onSuccess = onSuccessMutate(client, [endpoint, ...refetchQueries])
 
-    if (id) return useMutation(async (params: ParamsProps) => await api.put(`${endpoint}/${id}`, params), { ...options, onSuccess })
+    if (id) return useMutation((params: ParamsProps) => api.put(`${endpoint}/${id}`, params), { ...options, onSuccess })
 
-    return useMutation(async (params: ParamsProps) => await api.post(endpoint, params), { ...options, onSuccess })
+    return useMutation((params: ParamsProps) => api.post(endpoint, params), { ...options, onSuccess })
   }
 
   const useDelete: UseDeleteProps = (options = {}) => {
     const { refetchQueries = [] } = options
     const onSuccess = onSuccessMutate(client, [endpoint, ...refetchQueries])
 
-    return useMutation(async ({ id, ...options }: ParamsProps) => await api.delete(`${endpoint}/${id ?? ''}`, options), { onSuccess, ...options })
+    return useMutation(({ id, ...options }: ParamsProps) => api.delete(`${endpoint}/${id ?? ''}`, options), { onSuccess, ...options })
   }
 
   /**

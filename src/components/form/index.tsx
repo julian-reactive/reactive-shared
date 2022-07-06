@@ -10,6 +10,7 @@ import reduce from 'lodash/reduce'
 import map from 'lodash/map'
 import isEmpty from 'lodash/isEmpty'
 import each from 'lodash/each'
+import isEqual from 'lodash/isEqual'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -18,7 +19,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Tooltip from '@mui/material/Tooltip'
 
 // Intl
-import { Intl, onlyText } from '../../utils'
+import { Intl, onlyText, usePreviousValue } from '../../utils'
 
 // Build Input
 import BuildInput, { InputProps, RenderProps } from './buildInput'
@@ -67,7 +68,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   onSubmit
 }) => {
   const navigate = useNavigate()
-  const formValues = useRef<any>()
+
 
   const [validationSchema]: [any, any] = useState(() => {
     const fields: { [key: string]: any } = reduce(inputsFormConfig, (prev, { name, yupValidation }) => ({
@@ -93,11 +94,19 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     ...useFormProps
   } = useForm<{ [key: string]: any }>({ resolver: yupResolver(validationSchema) })
 
-  if (process.env.NODE_ENV === 'development') {
-    formValues.current = useFormProps.getValues() // debug form values in component
-  }
+  const prevFormValues = usePreviousValue(useFormProps.getValues())
+  const prevFormConfig = usePreviousValue(inputsFormConfig)
+console.log('useFormProps.getValues()', useFormProps.getValues())
+  useEffect(() => {
+    console.log('...',Object.is(inputsFormConfig, prevFormConfig))
+    console.log('/////',isEqual(inputsFormConfig, prevFormConfig))
+    console.log('prevFormConfig', prevFormConfig)
+    console.log('inputsFormConfig', inputsFormConfig)
+
+  }, [inputsFormConfig, prevFormConfig])
 
   const buildForm = useMemo(() => {
+    console.log('inputsFormConfig', inputsFormConfig)
     return map(inputsFormConfig, ({
       showInput = true,
       tooltip,
@@ -164,8 +173,6 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
       console.log('errors in form', useFormProps.formState.errors)
     }
   }, [useFormProps])
-
-  console.log('useFormProps.formState.errors', useFormProps.formState.errors)
 
   useEffect(() => {
     if (!isEmpty(responseErrors)) {

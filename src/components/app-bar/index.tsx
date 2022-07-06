@@ -23,26 +23,18 @@ import { sxAppBar, sxLinkHome } from './sx'
 // Icon
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // const icon = require('../../assets/logo-icon.png').default
-const icon = ''
 // import {OverridableComponent} from "@mui/material/OverridableComponent";
 // import {SvgIconTypeMap} from "@mui/material";
 
 // Interfaces
 // import { MainAppHookProps } from '../../hoc/appRoutes'
-export interface MenuItemsProps {
-  name: string
-  // icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string}
-  // icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; }
-  icon: any
-  path: string
-  divider?: boolean
-}
 
 interface ButtonAppBarProps {
   mainAppHook: any
+  logo: any
 }
 
-const ButtonAppBar: React.FC<ButtonAppBarProps> = ({ mainAppHook }) => {
+const ButtonAppBar: React.FC<ButtonAppBarProps> = ({ mainAppHook, logo }) => {
   const { pageTitle } = useAppContext()
   const { menuItems } = mainAppHook()
   const [isMenuOpen, setOpenMenu] = useState(false)
@@ -54,7 +46,7 @@ const ButtonAppBar: React.FC<ButtonAppBarProps> = ({ mainAppHook }) => {
       <AppBar sx={sxAppBar} position='fixed'>
         <Toolbar>
           <Link sx={sxLinkHome} to='/'>
-            <img src={icon} alt='icon' />
+            <img src={logo} alt='logo' />
           </Link>
 
           <Typography sx={{ flexGrow: 1 }} color='secondary' variant='h6'>

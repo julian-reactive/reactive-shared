@@ -18,7 +18,14 @@ import { Intl, onlyText } from '../../utils'
 import { sxSubHeader } from './sx'
 
 // interfaces
-import { MenuItemsProps } from './'
+export interface MenuItemsProps {
+  name: string
+  // icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string}
+  // icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; }
+  icon: any
+  path: string
+  divider?: boolean
+}
 
 interface MenuProps {
   isMenuOpen: boolean
