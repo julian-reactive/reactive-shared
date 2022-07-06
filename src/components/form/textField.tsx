@@ -37,7 +37,7 @@ const SharedTextField: React.FC<BuildInputProps> = ({
 }) => {
   const previousValue = usePreviousValue(value)
 
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState(field.value || value || '')
 
   const renderStartAdornment = useMemo(() => {
     if (icon == null) return undefined
@@ -84,6 +84,7 @@ const SharedTextField: React.FC<BuildInputProps> = ({
     <TextField
       {...inputProps}
       {...field}
+      inputRef={field.ref}
       onChange={handleChange}
       value={inputValue}
       fullWidth

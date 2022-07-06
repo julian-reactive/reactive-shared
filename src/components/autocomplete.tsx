@@ -57,15 +57,14 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
   inputProps,
   renderProps,
   onChange,
-  value: fieldValue,
   useFormProps, // eslint-disable-line @typescript-eslint/no-unused-vars
   ...props
 }) => {
   const { field: fieldProps, fieldState: { error } } = renderProps
   const { onChange: onChangeField } = fieldProps
-  const { label, helpText, incomingValue } = inputProps
+  const { label, helpText, value } = inputProps
 
-  const [autocompleteValue, setAutocompleteValue] = useState(fieldValue)
+  const [autocompleteValue, setAutocompleteValue] = useState(value)
   const [inputValue, setInputValue] = useState('')
   const [inputOptions, setInputOptions] = useState(options)
 
@@ -120,11 +119,11 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
 
   // if a value is updated
   useEffect(() => {
-    if (incomingValue === undefined || incomingValue === null) return undefined
-    setInputValue(incomingValue)
+    if (value === undefined || value === null) return undefined
+    setInputValue(value)
 
-    onChangeField(incomingValue)
-  }, [incomingValue])// eslint-disable-line react-hooks/exhaustive-deps
+    onChangeField(value)
+  }, [value])// eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (Object.is(useQuery, defaultUseQuery)) {

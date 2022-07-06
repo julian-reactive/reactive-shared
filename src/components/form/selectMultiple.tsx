@@ -37,7 +37,7 @@ const SharedSelectMultiple: React.FC<BuildInputProps> = ({
 }) => {
   const previousValue = usePreviousValue(value)
 
-  const [inputValue, setInputValue] = useState(value)
+  const [inputValue, setInputValue] = useState(field.value || value || '')
 
   const handleOnChange = useCallback((evt: SelectChangeEvent) => {
     const { value } = evt.target

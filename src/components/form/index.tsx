@@ -1,5 +1,5 @@
 // Libraries
-import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -10,7 +10,6 @@ import reduce from 'lodash/reduce'
 import map from 'lodash/map'
 import isEmpty from 'lodash/isEmpty'
 import each from 'lodash/each'
-import isEqual from 'lodash/isEqual'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -19,7 +18,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Tooltip from '@mui/material/Tooltip'
 
 // Intl
-import { Intl, onlyText, usePreviousValue } from '../../utils'
+import { Intl, onlyText } from '../../utils'
 
 // Build Input
 import BuildInput, { InputProps, RenderProps } from './buildInput'
@@ -69,7 +68,6 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
 }) => {
   const navigate = useNavigate()
 
-
   const [validationSchema]: [any, any] = useState(() => {
     const fields: { [key: string]: any } = reduce(inputsFormConfig, (prev, { name, yupValidation }) => ({
       ...prev,
@@ -80,9 +78,10 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   })
 
   const handleBackAction = useCallback(() => {
-    if (typeof backTo === 'string') {
+    if (backTo) {
       navigate(backTo)
     } else {
+      console.log('navigate')
       navigate(-1)
     }
   }, [navigate, backTo])
@@ -94,19 +93,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     ...useFormProps
   } = useForm<{ [key: string]: any }>({ resolver: yupResolver(validationSchema) })
 
-  const prevFormValues = usePreviousValue(useFormProps.getValues())
-  const prevFormConfig = usePreviousValue(inputsFormConfig)
-console.log('useFormProps.getValues()', useFormProps.getValues())
-  useEffect(() => {
-    console.log('...',Object.is(inputsFormConfig, prevFormConfig))
-    console.log('/////',isEqual(inputsFormConfig, prevFormConfig))
-    console.log('prevFormConfig', prevFormConfig)
-    console.log('inputsFormConfig', inputsFormConfig)
-
-  }, [inputsFormConfig, prevFormConfig])
-
   const buildForm = useMemo(() => {
-    console.log('inputsFormConfig', inputsFormConfig)
     return map(inputsFormConfig, ({
       showInput = true,
       tooltip,
@@ -198,7 +185,7 @@ console.log('useFormProps.getValues()', useFormProps.getValues())
         <Button
           color='primary'
           disableElevation
-          disabled={loading || disabled || !useFormProps.formState.isDirty}
+          disabled={loading || disabled}
           type='submit'
           variant='contained'
         >

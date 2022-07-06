@@ -31,7 +31,7 @@ const SharedRadio: React.FC<BuildInputProps> = ({
 }) => {
   const previousValue = usePreviousValue(value)
 
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState(field.value || value || '')
 
   const handleChangeInputValue = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = evt.target

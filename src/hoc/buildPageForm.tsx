@@ -115,9 +115,10 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
   const formData = useMemo<InputsFormConfigProps>(() => {
     const { data = {} } = queryData
 
-    if (isEmpty(data)) return inputsFormConfig
+    if (!id || isEmpty(data)) return inputsFormConfig
 
     if (!dataSet.current) {
+      dataSet.current = true
       each(inputsFormConfig, fieldProps => {
         if (data[fieldProps.name] !== undefined) {
           fieldProps.value = data[fieldProps.name]
@@ -125,17 +126,14 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
         }
       })
     }
-    dataSet.current = true
-    console.log('afterQuery' )
 
-    if ((afterQuery != null) && !afterQueryCalled.current) {
+    if (afterQuery != null && !afterQueryCalled.current) {
+      afterQueryCalled.current = true
       afterQuery(inputsFormConfig, data)
     }
 
-    afterQueryCalled.current = true
-
-    return cloneDeep(inputsFormConfig)
-  }, [queryData, inputsFormConfig, afterQuery])
+    return inputsFormConfig
+  }, [queryData, inputsFormConfig, afterQuery, id])
 
   const confirmButtonText = useMemo(() => {
     if (confirmButtonLangkey !== undefined) return confirmButtonLangkey

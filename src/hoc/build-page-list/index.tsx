@@ -81,6 +81,13 @@ export interface DialogOptionsProps {
   [key: string]: DialogOptionProps
 }
 
+export interface SelectedItemProps {
+  id: string | number
+  name: string
+
+  [key: string]: any
+}
+
 /**
  * Used for split content in tabs
  * tabsHeader: label for show in tabhead
@@ -95,13 +102,6 @@ interface TabsProps {
 type ItemComponentProps =
   NamedExoticComponent<any>
   | ((props: { item: SelectedItemProps, onSelect: () => void, [key: string]: any, onClose: () => void }) => ReactElement)
-
-export interface SelectedItemProps {
-  id: string | number
-  name: string
-
-  [key: string]: any
-}
 
 export interface BuildPageListProps {
   // useQuery: (options?: UseQueryOptions) => UseQueryResult
@@ -151,7 +151,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   const [selectedItem, setSelectedItem] = useState<SelectedItemProps | undefined>(undefined)
 
   const queryParams = useMemo(() => {
-    if (searchParams !== undefined) return useQueryParams
+    if (!searchParams) return useQueryParams
 
     return { params: searchParams }
   }, [useQueryParams, searchParams])
