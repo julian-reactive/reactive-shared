@@ -19,6 +19,7 @@ import { AxiosResponse } from 'axios'
 import { api } from './api'
 
 // Interfaces
+// #region
 export interface ParamsProps {
   id?: string
   [key: string]: any
@@ -72,6 +73,7 @@ type UseCustomQueryProps = (name: string, endpoint: string) => (queryParams: {id
 type UseCustomMutateProps = (endpoint: string) => (id: string | null, options: UseMutateOptionsProps) => any
 
 type OnSuccessMutateProps = (client: QueryClient, queries: string[]) => () => Promise<any>
+// #endregion
 
 const onSuccessMutate: OnSuccessMutateProps = (client, queries) => async () => {
   return await Promise.all(queries.map(async (query: any) => await client.refetchQueries(query)))
@@ -93,7 +95,7 @@ const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null
   const onSuccess = onSuccessMutate(useQueryClient(), [endpoint, ...refetchQueries])
 
   return useMutation(async (params) => {
-    if (id !== null) return await api.put(`${endpoint}/${id}`, params)
+    if (id) return await api.put(`${endpoint}/${id}`, params)
     return await api.post(endpoint, params)
   }, { onSuccess, ...options })
 }
@@ -155,7 +157,7 @@ export const useCreateApi: UseCreateApiProps = (endpoint, additionalEndpoints) =
     const { refetchQueries = [] } = options
     const onSuccess = onSuccessMutate(client, [endpoint, ...refetchQueries])
 
-    if (id !== null) return useMutation(async (params: ParamsProps) => await api.put(`${endpoint}/${id}`, params), { ...options, onSuccess })
+    if (id) return useMutation(async (params: ParamsProps) => await api.put(`${endpoint}/${id}`, params), { ...options, onSuccess })
 
     return useMutation(async (params: ParamsProps) => await api.post(endpoint, params), { ...options, onSuccess })
   }

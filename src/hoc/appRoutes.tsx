@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import React from 'react'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -24,21 +24,17 @@ interface AppRoutesProps {
 const logged = Boolean(getLocalStorageValue('token'))
 
 const AppRoutesContainer: React.FC<AppRoutesProps> = ({ UserEntity, routes, MainAppProvider, mainAppHook }) => {
-  const [authRoutes] = useState(() => {
-    const routesMap = routes.map(({ Element, ...route }) => {
-      return <Route key={route.path} {...route} element={<Element />} />
-    })
-
-    return routesMap
-  })
-
   return (
-    <HashRouter>
+    <Router>
       <MainAppProvider>
         {Boolean(logged) && <AppBar mainAppHook={mainAppHook} />}
         <Box sx={{ mt: logged ? 8 : 0 }}>
           <Routes>
-            {logged && authRoutes}
+            {logged && (
+              routes.map(({ Element, ...route }) => {
+                return <Route key={route.path} {...route} element={<Element />} />
+              })
+            )}
             <Route
               path='/user/*'
               element={<UserEntity />}
@@ -47,7 +43,7 @@ const AppRoutesContainer: React.FC<AppRoutesProps> = ({ UserEntity, routes, Main
           </Routes>
         </Box>
       </MainAppProvider>
-    </HashRouter>
+    </Router>
   )
 }
 

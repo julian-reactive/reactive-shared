@@ -48,11 +48,11 @@ export interface BuildFormProps {
   confirmButtonLangkey?: string
   inputsFormConfig: InputsFormConfigProps
   responseErrors?: { [key: string]: string }
-  onSubmit: (arg0: tAnyObject) => void
+  onSubmit?: (arg0: tAnyObject) => void
   defaultSuccessMessage?: boolean
 }
 
-type RenderBuildInputProps = (renderPros: RenderProps, inputProps: InputProps) => any
+export type RenderBuildInputProps = (renderPros: RenderProps, inputProps: InputProps, useFormProps: any) => any
 
 // #endregion
 
@@ -97,12 +97,6 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     formValues.current = useFormProps.getValues() // debug form values in component
   }
 
-  const renderBuildInput = useCallback<RenderBuildInputProps>((renderProps, inputProps) => {
-    return (
-      <BuildInput renderProps={renderProps} inputProps={inputProps} useFormProps={useFormProps} />
-    )
-  }, [useFormProps])
-
   const buildForm = useMemo(() => {
     return map(inputsFormConfig, ({
       showInput = true,
@@ -115,21 +109,17 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
         return null
       }
 
-      const buildInputController = (
-        <Controller
-          key={key}
-          name={inputProps.name}
-          control={control}
-          render={(renderProps) => renderBuildInput(renderProps, inputProps)}
-        />
-      )
-
       if (tooltip !== undefined) {
         return (
           <Box key={key} mt={1} {...parentBox}>
             <Tooltip title={onlyText(tooltip)} arrow placement='top'>
               <div>
-                {buildInputController}
+                <Controller
+                  key={key}
+                  name={inputProps.name}
+                  control={control}
+                  render={(renderProps) => <BuildInput renderProps={renderProps} inputProps={inputProps} useFormProps={useFormProps} />}
+                />
               </div>
             </Tooltip>
           </Box>
@@ -138,12 +128,17 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
 
       return (
         <Box key={key} mt={1} {...parentBox}>
-          {buildInputController}
+          <Controller
+            key={key}
+            name={inputProps.name}
+            control={control}
+            render={(renderProps) => <BuildInput renderProps={renderProps} inputProps={inputProps} useFormProps={useFormProps} />}
+          />
         </Box>
       )
     }
     )
-  }, [inputsFormConfig, control, renderBuildInput])
+  }, [inputsFormConfig, control, useFormProps])
 
   const backButton = useMemo(() => {
     if (noBackButton) return null
@@ -170,6 +165,8 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     }
   }, [useFormProps])
 
+  console.log('useFormProps.formState.errors', useFormProps.formState.errors)
+
   useEffect(() => {
     if (!isEmpty(responseErrors)) {
       each(responseErrors, (error, name) => {
@@ -178,10 +175,8 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     }
   }, [responseErrors, setError])
 
-  const isButtonSubmitDisabled = Boolean(loading) || Boolean(disabled) || !useFormProps.formState.isDirty
-
   return (
-    <form autoComplete='off' data-testid='form' onSubmit={handleSubmit(onSubmit)}>
+    <form autoComplete='off' data-testid='form' onSubmit={handleSubmit(onSubmit!)}>
       <Box>
         {buildForm}
       </Box>
@@ -196,7 +191,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
         <Button
           color='primary'
           disableElevation
-          disabled={isButtonSubmitDisabled}
+          disabled={loading || disabled || !useFormProps.formState.isDirty}
           type='submit'
           variant='contained'
         >

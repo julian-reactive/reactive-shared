@@ -1,4 +1,4 @@
-import React, { ComponentType, useMemo } from 'react'
+import React, { ComponentType } from 'react'
 import { Routes, Route, Outlet } from 'react-router-dom'
 
 export interface BuildEntityPageProps {
@@ -10,17 +10,12 @@ export interface BuildEntityPageProps {
 }
 
 const BuildEntityPageComponent: React.FC<BuildEntityPageProps> = ({ routes }) => {
-  const routesMemoized = useMemo(() => {
-    return routes.map(({ index = false, path, Component }) => (
-      <Route key={path} index={index} path={path} element={<Component />} />
-    ))
-  }, [routes]
-  )
-
   return (
     <>
       <Routes>
-        {routesMemoized}
+        {routes.map(({ index = false, path, Component }) => (
+          <Route key={path} index={index} path={path} element={<Component />} />
+        ))}
       </Routes>
       <Outlet />
     </>

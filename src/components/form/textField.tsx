@@ -21,10 +21,7 @@ import { sxTextField } from './styles'
 
 const SharedTextField: React.FC<BuildInputProps> = ({
   renderProps: {
-    field: {
-      onChange: onChangeField,
-      ...field
-    },
+    field,
     fieldState: { error }
   },
   inputProps: {
@@ -66,7 +63,7 @@ const SharedTextField: React.FC<BuildInputProps> = ({
 
   const handleChange = useCallback((evt: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { value } = evt.target
-    onChangeField(value)
+    field.onChange(value)
     setInputValue(value)
 
     if (typeof onChange === 'function') {
@@ -78,7 +75,7 @@ const SharedTextField: React.FC<BuildInputProps> = ({
 
   useEffect(() => {
     if (!isEqual(previousValue, value)) {
-      onChangeField(value)
+      field.onChange(value)
       setInputValue(value)
     }
   }, [previousValue, value]) // eslint-disable-line react-hooks/exhaustive-deps
