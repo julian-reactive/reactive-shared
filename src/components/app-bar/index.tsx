@@ -20,15 +20,7 @@ import Menu from './menu'
 // Styles
 import { sxAppBar, sxLinkHome } from './sx'
 
-// Icon
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// const icon = require('../../assets/logo-icon.png').default
-// import {OverridableComponent} from "@mui/material/OverridableComponent";
-// import {SvgIconTypeMap} from "@mui/material";
-
 // Interfaces
-// import { MainAppHookProps } from '../../hoc/appRoutes'
-
 interface ButtonAppBarProps {
   mainAppHook: any
   logo: any

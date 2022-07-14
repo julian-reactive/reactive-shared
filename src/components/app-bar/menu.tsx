@@ -33,7 +33,7 @@ interface MenuProps {
   menuItems: MenuItemsProps[]
 }
 
-const container = window !== undefined ? () => window.document.body : undefined
+// const container = window !== undefined ? () => window.document.body : undefined
 
 const Menu: React.FC<MenuProps> = ({ isMenuOpen, onCloseMenu, menuItems }) => {
   const renderMenuItems = useMemo(() => {
@@ -67,10 +67,9 @@ const Menu: React.FC<MenuProps> = ({ isMenuOpen, onCloseMenu, menuItems }) => {
 
   return (
     <Drawer
-      sx={{ mt: 6, bgcolor: 'primary.main', '& .MuiListItemText-primary': { color: 'rgba(0, 0, 0, 0.87)' } }}
-      container={container}
+      // sx={{ mt: 6, bgcolor: 'primary.main', '& .MuiListItemText-primary': { color: 'rgba(0, 0, 0, 0.87)' } }}
+
       anchor='right'
-      variant='temporary'
       open={isMenuOpen}
       onClose={onCloseMenu}
       ModalProps={{
