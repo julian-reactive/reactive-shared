@@ -111,7 +111,8 @@ export interface BuildPageListProps {
     params: {
       [key: string]: string | number | boolean
     }
-  }
+  },
+  useQueryOptions?: {[key: string]: any}
   /** URL for ADD page */
   addRoute?: string
   /** translation string */
@@ -132,6 +133,7 @@ export interface BuildPageListProps {
 const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   useQuery,
   useQueryParams,
+  useQueryOptions = {},
   addRoute,
   pageTitle,
   addText,
@@ -155,8 +157,8 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
 
     return { params: searchParams }
   }, [useQueryParams, searchParams])
-
-  const { loading: isLoading, data: queryData, error } = useQuery(queryParams)
+  console.log('useQueryOptions', useQueryOptions)
+  const { loading: isLoading, data: queryData, error } = useQuery(queryParams, useQueryOptions)
 
   const handleSelectItem = useCallback((selectedItem: any) => () => {
     if ((dialogOptions != null) || (DialogComponent != null)) {
