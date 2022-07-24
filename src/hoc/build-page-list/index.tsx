@@ -157,7 +157,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
 
     return { params: searchParams }
   }, [useQueryParams, searchParams])
-  console.log('useQueryOptions', useQueryOptions)
+
   const { loading: isLoading, data: queryData, error } = useQuery(queryParams, useQueryOptions)
 
   const handleSelectItem = useCallback((selectedItem: any) => () => {

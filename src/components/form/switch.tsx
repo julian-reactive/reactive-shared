@@ -5,13 +5,13 @@ import isEqual from 'lodash/isEqual'
 import Box from '@mui/material/Box'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
 import FormHelperText from '@mui/material/FormHelperText'
+import Switch from '@mui/material/Switch'
 
 import { BuildInputProps } from './buildInput'
 import { usePreviousValue, useLabel } from '../../utils'
 
-const SharedCheckbox: React.FC<BuildInputProps> = ({
+const SharedSwitch: React.FC<BuildInputProps> = ({
   renderProps: {
     field: {
       onChange: onChangeField,
@@ -75,11 +75,11 @@ const SharedCheckbox: React.FC<BuildInputProps> = ({
         <FormControlLabel
           disabled={disabled}
           control={(
-            <Checkbox
-              disabled={disabled}
-              checked={checked}
-              onChange={handleChange}
-            />)}
+            <Switch
+            checked={checked}
+            onChange={handleChange}
+            inputProps={{ 'aria-label': 'controlled' }}
+          />)}
           label={renderLabel}
         />
       </FormGroup>
@@ -88,4 +88,4 @@ const SharedCheckbox: React.FC<BuildInputProps> = ({
   )
 }
 
-export default React.memo(SharedCheckbox)
+export default React.memo(SharedSwitch)

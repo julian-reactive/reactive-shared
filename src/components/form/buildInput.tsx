@@ -18,9 +18,10 @@ import SelectMultiple from './selectMultiple'
 import DatePicker from './datePicker'
 import NumberFormat from './numberFormat'
 import Checkbox from './checkbox'
+import Switch from './switch'
 
 // Interfaces
-type HTMLTypeProps = 'checkbox' | 'radio' | 'select' | 'selectMultiple' | 'text' | 'textarea' | 'password' | 'email' | 'number'
+type HTMLTypeProps = 'checkbox' | 'radio' | 'select' | 'selectMultiple' | 'text' | 'textarea' | 'password' | 'email' | 'number' | 'switch'
 type SharedTypeProps = 'numberFormat' | 'divider' | 'datePicker' | 'component'
 type TypeProps = HTMLTypeProps | SharedTypeProps
 
@@ -115,6 +116,8 @@ const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps):
       return (<Select {...props} />)
     case 'selectMultiple':
       return (<SelectMultiple {...props} />)
+    case 'switch':
+      return (<Switch {...props} />)
     case 'component':
       if (props.inputProps.component !== undefined) return props.inputProps.component(props)
 

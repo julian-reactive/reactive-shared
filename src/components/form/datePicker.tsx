@@ -3,9 +3,9 @@ import React from 'react'
 
 // Material Components
 import TextField from '@mui/material/TextField'
-import MobileDatePicker from '@mui/lab/MobileDatePicker'
-import AdapterDateFns from '@mui/lab/AdapterDateFns'
-import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 
 // Shared
 import { useLabel } from '../../utils'

@@ -81,7 +81,6 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     if (backTo) {
       navigate(backTo)
     } else {
-      console.log('navigate')
       navigate(-1)
     }
   }, [navigate, backTo])
