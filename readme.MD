@@ -1,7 +1,7 @@
 # Reactive Shared
 Super Set of libraries for build Apps faster.
 
-This app will help to build list/form based app faster without too much thinking.
+This app will help to build list && form based apps in a faster without too much thinking.
 
 The main libraries in this app are:
 - [react](https://es.reactjs.org/)
@@ -15,7 +15,7 @@ Other libraries like [yup](https://github.com/jquense/yup), [moment](https://mom
 ---
 
 # IMPORTANT!
-__Reactive Shared__ was build with __webpack__  as bundler and some ___peerDependencies___. It's ___mandatory___ to keep same versions in main app, for avoid conflicts and duplicated libraries. 
+__Reactive Shared__ was build with __webpack__ as bundler and some ___peerDependencies___. It's ___mandatory___ to keep same versions in main app, for avoid conflicts and duplicated libraries.
 - "@date-io/date-fns": "^2.14.0",
 - "@emotion/react": "11.9.3",
 - "@emotion/styled": "11.9.3",
@@ -52,23 +52,42 @@ resolve: {
 ---
 
 # Index
-- [Setting the App](#setting-the-app)
-  - [Structure Proposal]()
-  - [App Context](#app-context)
-  - [Auth Component](#auth-component)
-  - [Routing](#routing)
-  - [index.tsx](#indextsx)
-  - [App.tsx](#apptsx)
-- [Initial Config](#initial-config)
-  - [translations](#translations)
-  - [mainContext](#main-context)
-  - [menuItems](#menu-items)
-  - [routes](#routes)
-- [List Builder](#list-builder)
-- [Form Builder](#form-builder)
+- [Reactive Shared](#reactive-shared)
+- [IMPORTANT!](#important)
+- [Index](#index)
+  - [Setting the App](#setting-the-app)
+    - [Structure Proposal](#structure-proposal)
+      - [assets](#assets)
+      - [config](#config)
+    - [App Context](#app-context)
+    - [Auth Component](#auth-component)
+    - [Routing](#routing)
+    - [index.tsx](#indextsx)
+    - [app.tsx](#apptsx)
+  - [Initial Config](#initial-config)
+    - [Translations](#translations)
+    - [Main Context](#main-context)
+    - [Menu Items](#menu-items)
+    - [Routes](#routes)
+  - [List Builder](#list-builder)
+  - [Form Builder](#form-builder)
+- [Troubleshot](#troubleshot)
 
 ## Setting the App
 ### Structure Proposal
+- src
+  - **assets**:
+  - **config**: store configuration files needed for set the app with `reactive-shared` library.
+  - **entities**: set app sections here 
+  - **App.tsx**: set app config
+  - **index.tsx**: app entrypoint
+
+#### assets
+folder for store media files
+
+#### config
+folder for store all
+
 ### App Context
 ### Auth Component
 ### Routing
