@@ -1,21 +1,32 @@
-import React, { ComponentType } from 'react'
+import React, { ComponentType, useMemo } from 'react'
 import { Routes, Route, Outlet } from 'react-router-dom'
 
 export interface BuildEntityPageProps {
   routes: Array<{
     index?: boolean
     path?: string
-    Component: ComponentType
+    Component: ComponentType,
+    roles?: string[]
   }>
+  rol?: string
 }
 
-const BuildEntityPageComponent: React.FC<BuildEntityPageProps> = ({ routes }) => {
+const BuildEntityPageComponent: React.FC<BuildEntityPageProps> = ({ routes, rol }) => {
+  const renderRoutes = useMemo(() => {
+    const filteredRoutes: React.ReactElement[] = []
+
+    routes.forEach(({ Component, roles = [], path }) => {
+      if (roles.length && rol && !roles.includes(rol)) return
+      filteredRoutes.push(<Route key={path} path={path} element={<Component />} />)
+    })
+
+    return filteredRoutes
+  }, [routes, rol])
+
   return (
     <>
       <Routes>
-        {routes.map(({ index = false, path, Component }) => (
-          <Route key={path} index={index} path={path} element={<Component />} />
-        ))}
+        {renderRoutes}
       </Routes>
       <Outlet />
     </>
