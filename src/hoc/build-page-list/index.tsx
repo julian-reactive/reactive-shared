@@ -65,27 +65,27 @@ import DefaultDialog from './defaultDialog'
  * ```
  */
 
+ export interface SelectedItemProps {
+  id: string | number
+  name: string
+
+  [key: string]: any
+}
+
 export interface DialogOptionProps {
   icon: ReactElement
   text: ReactElement
   to?: string | ((selectedItem: SelectedItemProps) => void)
   onConfirm?: (selectedItem: SelectedItemProps) => void
-  // Component?: (props: { item: SelectedItemProps, onClose: () => void }) => ReactElement
   Component?: React.ComponentType<{ item: SelectedItemProps, onClose: () => void }>
+  // Component?: NamedExoticComponent<ChangeStatusProps>
   disabled?: boolean | ((selectedItem: SelectedItemProps) => boolean)
   shouldRender?: (selectedItem: SelectedItemProps) => boolean
-  // Component: ItemComponentProps
+  dialogTitle?: string | ((selectedItem: SelectedItemProps) => string)
 }
 
 export interface DialogOptionsProps {
   [key: string]: DialogOptionProps
-}
-
-export interface SelectedItemProps {
-  id: string | number
-  name: string
-
-  [key: string]: any
 }
 
 /**

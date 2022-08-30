@@ -136,6 +136,16 @@ const DefaultDialogComponent: React.FC<DefaultDialogProps> = ({ options, title, 
     return <Component item={selectedItem} onClose={onClose} />
   }, [options, selectedItem, selectedOption, onClose])
 
+  const renderDialogTitle = useMemo(() => {
+    const dialogTitle = options[selectedOption]?.dialogTitle
+
+    if (!dialogTitle) return title
+
+    if (typeof dialogTitle === 'function') return dialogTitle(selectedItem)
+
+    return dialogTitle
+  }, [title, options, selectedItem, selectedOption])
+
   const renderContent = useMemo(() => {
     switch (showRender) {
       case 'renderConfirmBox':
@@ -156,7 +166,7 @@ const DefaultDialogComponent: React.FC<DefaultDialogProps> = ({ options, title, 
       open
     >
       <DialogTitle id='default-dialog-title'>
-        {title}
+        {renderDialogTitle}
         <IconButton sx={sxCloseDialogButton} aria-label='close' onClick={onClose}>
           <CloseIcon fontSize='small' />
         </IconButton>
