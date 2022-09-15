@@ -9,7 +9,7 @@ import Checkbox from '@mui/material/Checkbox'
 import FormHelperText from '@mui/material/FormHelperText'
 
 import { BuildInputProps } from './buildInput'
-import { usePreviousValue, useLabel } from '../../utils'
+import { usePreviousValue, useLabel, onlyText } from '../../utils'
 
 const SharedCheckbox: React.FC<BuildInputProps> = ({
   renderProps: {
@@ -52,9 +52,10 @@ const SharedCheckbox: React.FC<BuildInputProps> = ({
       )
     }
     if (helpText !== undefined) {
+      const text = typeof helpText === 'string' ? helpText : helpText(onlyText)
       return (
         <FormHelperText>
-          {helpText}
+          {text}
         </FormHelperText>
       )
     }

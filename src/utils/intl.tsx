@@ -51,7 +51,7 @@ export const initLangCode = (newTranslations: LangTranslationsProps): void => {
   translations = newTranslations
 }
 
-type OnlyTextProps = (langKey: string, replace?: iReplace, noCache?: boolean) => string
+export type OnlyTextProps = (langKey: string, replace?: iReplace, noCache?: boolean) => string
 
 /**
  * Function for get copy from translation json file
