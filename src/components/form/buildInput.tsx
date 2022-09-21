@@ -20,6 +20,8 @@ import NumberFormat from './numberFormat'
 import Checkbox from './checkbox'
 import Switch from './switch'
 
+import { OnlyTextProps } from '../../utils'
+
 // Interfaces
 type HTMLTypeProps = 'checkbox' | 'radio' | 'select' | 'selectMultiple' | 'text' | 'textarea' | 'password' | 'email' | 'number' | 'switch'
 type SharedTypeProps = 'numberFormat' | 'divider' | 'datePicker' | 'component'
@@ -37,7 +39,7 @@ export interface InputProps {
   error?: boolean
   errors?: { [key: string]: string }
   parentBox?: { [key: string]: any }
-  helpText?: string
+  helpText?: string | string | ((onlyText: OnlyTextProps) => string)
   disabled?: boolean
   InputProps?: any
   multiline?: boolean

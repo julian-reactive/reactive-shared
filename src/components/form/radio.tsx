@@ -63,9 +63,10 @@ const SharedRadio: React.FC<BuildInputProps> = ({
       )
     }
     if (helpText !== undefined) {
+      const text = typeof helpText === 'string' ? helpText : helpText(onlyText)
       return (
         <FormHelperText>
-          {helpText}
+          {text}
         </FormHelperText>
       )
     }

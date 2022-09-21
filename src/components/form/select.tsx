@@ -72,7 +72,9 @@ const SharedSelect: React.FC<BuildInputProps> = ({
     }
 
     if (helpText !== undefined) {
-      return (<FormHelperText>{helpText}</FormHelperText>)
+      const text = typeof helpText === 'string' ? helpText : helpText(onlyText)
+
+      return (<FormHelperText>{text}</FormHelperText>)
     }
   }, [error, helpText])
 

@@ -9,7 +9,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import Switch from '@mui/material/Switch'
 
 import { BuildInputProps } from './buildInput'
-import { usePreviousValue, useLabel } from '../../utils'
+import { usePreviousValue, useLabel, onlyText } from '../../utils'
 
 const SharedSwitch: React.FC<BuildInputProps> = ({
   renderProps: {
@@ -52,9 +52,10 @@ const SharedSwitch: React.FC<BuildInputProps> = ({
       )
     }
     if (helpText !== undefined) {
+      const text = typeof helpText === 'string' ? helpText : helpText(onlyText)
       return (
         <FormHelperText>
-          {helpText}
+          {text}
         </FormHelperText>
       )
     }

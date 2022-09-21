@@ -1,6 +1,5 @@
 // Libraries
 import React, { useMemo, useCallback, useEffect, useState } from 'react'
-import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
 
 // Material Components
@@ -9,7 +8,7 @@ import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 
 // Shared
-import { usePreviousValue, useLabel } from '../../utils'
+import { usePreviousValue, useLabel, onlyText } from '../../utils'
 
 // Icons
 import Error from '@mui/icons-material/Error'
@@ -61,6 +60,17 @@ const SharedTextField: React.FC<BuildInputProps> = ({
     )
   }, [error])
 
+  const getHelperText = useMemo(() => {
+    if (error != null) {
+      return error.message
+    }
+
+    if (helpText !== undefined) {
+      const text = typeof helpText === 'string' ? helpText : helpText(onlyText)
+      return text
+    }
+  }, [error, helpText])
+
   const handleChange = useCallback((evt: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { value } = evt.target
     field.onChange(value)
@@ -92,7 +102,7 @@ const SharedTextField: React.FC<BuildInputProps> = ({
       sx={{ ...sxTextField, ...sx }}
       label={renderLabel}
       error={Boolean(error)}
-      helperText={get(error, 'message', helpText)}
+      helperText={getHelperText}
       InputProps={{
         ...InputProps,
         startAdornment: renderStartAdornment,
