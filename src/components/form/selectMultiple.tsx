@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import isEqual from 'lodash/isEqual'
-import isArray from 'lodash/isArray'
 
 // Material Components
 import InputLabel from '@mui/material/InputLabel'
@@ -81,12 +80,12 @@ const SharedSelectMultiple: React.FC<BuildInputProps> = ({
 
   const renderHelpText = useMemo(() => {
     if (error != null) {
-      const message = isArray(error) ? error[0].message : error.message
-      return (<FormHelperText>{message}</FormHelperText>)
+      return (<FormHelperText>{error.message}</FormHelperText>)
     }
 
     if (helpText !== undefined) {
-      return (<FormHelperText>{helpText}</FormHelperText>)
+      const text = typeof helpText === 'string' ? helpText : helpText(onlyText)
+      return (<FormHelperText>{text}</FormHelperText>)
     }
   }, [error, helpText])
 
