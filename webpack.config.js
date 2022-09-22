@@ -1,14 +1,11 @@
 const webpack = require('webpack')
 const path = require('path')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
   mode: 'production',
-  devtool: 'source-map',
   entry: {
-    index: './src/index.ts',
-
+    index: './src/index.ts'
   },
   output: {
     clean: true,
@@ -31,7 +28,7 @@ module.exports = {
     '@mui/lab': '@mui/lab',
     '@mui/icons-material': '@mui/icons-material',
     '@mui/system': '@mui/system',
-    '@fontsource/roboto': '@fontsource/roboto',
+    '@fontsource/roboto': '@fontsource/roboto'
   },
   plugins: [
     // new webpack.optimize.UglifyJsPlugin({
@@ -39,7 +36,7 @@ module.exports = {
     //   // sourceMap: true,
     //   include: /\.min\.js$/
     // }),
-    new webpack.ProgressPlugin(),
+    new webpack.ProgressPlugin()
     // new BundleAnalyzerPlugin() /// this create a report about how is distributed components
   ],
   module: {
