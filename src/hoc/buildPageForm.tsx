@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   UseMutateFunction,
@@ -10,7 +10,6 @@ import {
 import { useParams } from 'react-router-dom'
 import isEmpty from 'lodash/isEmpty'
 import each from 'lodash/each'
-import cloneDeep from 'lodash/cloneDeep'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -53,12 +52,14 @@ export interface BuildPageFormProps {
   pageTitle?: string
   buildFormProps: BuildFormProps
   actions: ActionsProps
+  removeIdFromForm: boolean
 }
 // #endregion
 
 const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
   entity,
   pageTitle = '',
+  removeIdFromForm = false,
   buildFormProps: {
     defaultSuccessMessage = true,
     noBackButton = false,
@@ -79,11 +80,12 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
 }) => {
   const { setPageTitle, setSnackBarMessage } = useAppContext()
   const { id = '' } = useParams()
+  const [newId] = useState(removeIdFromForm ? '' : id)
 
   const afterQueryCalled = useRef(false)
   const dataSet = useRef(false)
 
-  const { mutate, isSuccess, error, isLoading: adding, data: mutateData }: any = useMutate(id, useMutateOptions)
+  const { mutate, isSuccess, error, isLoading: adding, data: mutateData }: any = useMutate(newId, useMutateOptions)
 
   const { isLoading = false, data: queryData = {} }: any = useQuery({ id, params: useQueryParams }, {
     enabled: Boolean(id),
@@ -137,7 +139,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
 
   const confirmButtonText = useMemo(() => {
     if (confirmButtonLangkey !== undefined) return confirmButtonLangkey
-    if (id !== '') return 'GENERAL.EDIT'
+    if (newId !== '') return 'GENERAL.EDIT'
     return 'GENERAL.ADD'
   }, [confirmButtonLangkey, id])
 
@@ -146,7 +148,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
     if (pageTitle !== '') {
       setPageTitle(onlyText(pageTitle))
     } else if (entity !== undefined) {
-      const title = `${entity.toLocaleUpperCase()}.${id !== '' ? 'EDIT' : 'ADD'}.TITLE`
+      const title = `${entity.toLocaleUpperCase()}.${newId !== '' ? 'EDIT' : 'ADD'}.TITLE`
       setPageTitle(onlyText(title))
     }
   }, [id, setPageTitle, entity, pageTitle])
