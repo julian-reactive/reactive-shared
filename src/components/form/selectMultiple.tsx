@@ -16,6 +16,17 @@ import Chip from '@mui/material/Chip'
 import { BuildInputProps } from './buildInput'
 import { onlyText, usePreviousValue, useLabel } from '../../utils'
 
+const getValue = (fieldValue, value) => {
+  if (typeof fieldValue === 'string') {
+    return [fieldValue]
+  }
+  if (typeof value === 'string') {
+    return [value]
+  }
+
+  return fieldValue || value || []
+}
+
 const SharedSelectMultiple: React.FC<BuildInputProps> = ({
   renderProps: {
     field: {
@@ -36,7 +47,7 @@ const SharedSelectMultiple: React.FC<BuildInputProps> = ({
 }) => {
   const previousValue = usePreviousValue(value)
 
-  const [inputValue, setInputValue] = useState(field.value || value || '')
+  const [inputValue, setInputValue] = useState(getValue(field.value, value))
 
   const handleOnChange = useCallback((evt: SelectChangeEvent) => {
     const { value } = evt.target
