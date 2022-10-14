@@ -83,11 +83,20 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     return object().shape(fields)
   })
 
-  const handleBackAction = useCallback(() => {
-    const values = useFormProps.getValues()
-    const validateFields = Object.keys(values).filter(value => values[value] !== undefined && !isEmpty(values[value]))
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState,
+    ...useFormProps
+  } = useForm<{ [key: string]: any }>({ resolver: yupResolver(validationSchema) })
+  const { isDirty } = formState
 
-    if (validateFields.length > 0) {
+  const confirmDialog = useCallback(() => { backTo ? navigate(backTo) : navigate(-1) }, [navigate, backTo])
+  const closeDialog = useCallback(() => { setOpen(false) }, [])
+
+  const handleBackAction = useCallback(() => {
+    if (isDirty) {
       setOpen(true)
     } else {
       if (backTo) {
@@ -96,14 +105,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
         navigate(-1)
       }
     }
-  }, [navigate, backTo, open])
-
-  const {
-    control,
-    handleSubmit,
-    setError,
-    ...useFormProps
-  } = useForm<{ [key: string]: any }>({ resolver: yupResolver(validationSchema) })
+  }, [navigate, backTo, open, isDirty])
 
   const buildForm = useMemo(() => {
     return map(inputsFormConfig, ({
@@ -154,7 +156,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     return (
       <Dialog
         open
-        onClose={() => { setOpen(false) }}
+        onClose={closeDialog}
       >
         <DialogTitle>
           <Intl langKey='GENERAL.GO_BACK.TITLE' />
@@ -165,12 +167,12 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button onClick={() => { setOpen(false) }} variant='contained' color='error'><Intl langKey='GENERAL.CANCEL' /></Button>
-          <Button onClick={() => { backTo ? navigate(backTo) : navigate(-1) }} variant='contained'><Intl langKey='GENERAL.ACCEPT' /></Button>
+          <Button onClick={closeDialog} variant='contained' color='error'><Intl langKey='GENERAL.CANCEL' /></Button>
+          <Button onClick={confirmDialog} variant='contained'><Intl langKey='GENERAL.ACCEPT' /></Button>
         </DialogActions>
       </Dialog>
     )
-  }, [navigate, open, backTo])
+  }, [open])
 
   const backButton = useMemo(() => {
     if (noBackButton) return null
