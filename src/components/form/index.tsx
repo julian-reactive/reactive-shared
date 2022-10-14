@@ -16,6 +16,11 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Tooltip from '@mui/material/Tooltip'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 
 // Intl
 import { Intl, onlyText } from '../../utils'
@@ -67,6 +72,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   onSubmit
 }) => {
   const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
 
   const [validationSchema]: [any, any] = useState(() => {
     const fields: { [key: string]: any } = reduce(inputsFormConfig, (prev, { name, yupValidation }) => ({
@@ -78,12 +84,19 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   })
 
   const handleBackAction = useCallback(() => {
-    if (backTo) {
-      navigate(backTo)
+    const values = useFormProps.getValues()
+    const validateFields = Object.keys(values).filter(value => values[value] !== undefined && !isEmpty(values[value]))
+
+    if (validateFields.length > 0) {
+      setOpen(true)
     } else {
-      navigate(-1)
+      if (backTo) {
+        navigate(backTo)
+      } else {
+        navigate(-1)
+      }
     }
-  }, [navigate, backTo])
+  }, [navigate, backTo, open])
 
   const {
     control,
@@ -134,6 +147,30 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     }
     )
   }, [inputsFormConfig, control, useFormProps])
+
+  const RenderDialogBack = useMemo(() => {
+    if (!open) return undefined
+
+    return (
+      <Dialog
+        open
+        onClose={() => { setOpen(false) }}
+      >
+        <DialogTitle>
+          <Intl langKey='GENERAL.GO_BACK.TITLE' />
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <Intl transpileHTML paragraph langKey='GENERAL.GO_BACK.SUB_TITLE' />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Button onClick={() => { setOpen(false) }} variant='contained' color='error'><Intl langKey='GENERAL.CANCEL' /></Button>
+          <Button onClick={() => { backTo ? navigate(backTo) : navigate(-1) }} variant='contained'><Intl langKey='GENERAL.ACCEPT' /></Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }, [navigate, open, backTo])
 
   const backButton = useMemo(() => {
     if (noBackButton) return null
@@ -197,6 +234,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
           <Intl langKey={confirmButtonLangkey} />
         </Button>
       </Box>
+      {RenderDialogBack}
     </form>
   )
 }
