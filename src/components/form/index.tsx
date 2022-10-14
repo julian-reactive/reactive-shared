@@ -16,6 +16,11 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Tooltip from '@mui/material/Tooltip'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 
 // Intl
 import { Intl, onlyText } from '../../utils'
@@ -67,6 +72,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   onSubmit
 }) => {
   const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
 
   const [validationSchema]: [any, any] = useState(() => {
     const fields: { [key: string]: any } = reduce(inputsFormConfig, (prev, { name, yupValidation }) => ({
@@ -77,20 +83,29 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     return object().shape(fields)
   })
 
-  const handleBackAction = useCallback(() => {
-    if (backTo) {
-      navigate(backTo)
-    } else {
-      navigate(-1)
-    }
-  }, [navigate, backTo])
-
   const {
     control,
     handleSubmit,
     setError,
+    formState,
     ...useFormProps
   } = useForm<{ [key: string]: any }>({ resolver: yupResolver(validationSchema) })
+  const { isDirty } = formState
+
+  const confirmDialog = useCallback(() => { backTo ? navigate(backTo) : navigate(-1) }, [navigate, backTo])
+  const closeDialog = useCallback(() => { setOpen(false) }, [])
+
+  const handleBackAction = useCallback(() => {
+    if (isDirty) {
+      setOpen(true)
+    } else {
+      if (backTo) {
+        navigate(backTo)
+      } else {
+        navigate(-1)
+      }
+    }
+  }, [navigate, backTo, open, isDirty])
 
   const buildForm = useMemo(() => {
     return map(inputsFormConfig, ({
@@ -134,6 +149,30 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     }
     )
   }, [inputsFormConfig, control, useFormProps])
+
+  const RenderDialogBack = useMemo(() => {
+    if (!open) return undefined
+
+    return (
+      <Dialog
+        open
+        onClose={closeDialog}
+      >
+        <DialogTitle>
+          <Intl langKey='GENERAL.GO_BACK.TITLE' />
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <Intl transpileHTML paragraph langKey='GENERAL.GO_BACK.SUB_TITLE' />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Button onClick={closeDialog} variant='contained' color='error'><Intl langKey='GENERAL.CANCEL' /></Button>
+          <Button onClick={confirmDialog} variant='contained'><Intl langKey='GENERAL.ACCEPT' /></Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }, [open])
 
   const backButton = useMemo(() => {
     if (noBackButton) return null
@@ -197,6 +236,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
           <Intl langKey={confirmButtonLangkey} />
         </Button>
       </Box>
+      {RenderDialogBack}
     </form>
   )
 }
