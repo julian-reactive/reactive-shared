@@ -25,6 +25,7 @@ export interface MenuItemsProps {
   icon: any
   path: string
   divider?: boolean
+  disabled?: boolean
 }
 
 interface MenuProps {
@@ -43,10 +44,10 @@ const Menu: React.FC<MenuProps> = ({ isMenuOpen, onCloseMenu, menuItems }) => {
       </ListSubheader>
     )
 
-    const items = menuItems.map(({ name, icon: Icon, path, divider = false }) => {
+    const items = menuItems.map(({ name, icon: Icon, path, divider = false, disabled = false }) => {
       return (
         <Fragment key={`menu-list-item-to-${path}`}>
-          <ListItem button component={Link} onClick={onCloseMenu} to={path}>
+          <ListItem button component={Link} onClick={onCloseMenu} to={path} disabled={disabled}>
             <ListItemIcon>
               <Icon />
             </ListItemIcon>

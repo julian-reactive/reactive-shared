@@ -11,6 +11,7 @@ export interface RouteProp {
   path: string
   Element: any
   roles?: string[]
+  disabled?: boolean | ((status: any)=> boolean)
 }
 
 interface SharedRoutesProps {
@@ -27,8 +28,10 @@ const SharedRoutes: React.FC<SharedRoutesProps> = ({ routes, mainAppHook, UserEn
 
     const filteredRoutes: React.ReactElement[] = []
 
-    routes.forEach(({ Element, roles = [], path }) => {
+    routes.forEach(({ Element, roles = [], path, disabled }) => {
       if (roles.length && status?.rol && !roles.includes(status.rol)) return
+      if (disabled === true) return
+      if (typeof disabled === 'function' && disabled(status)) return
       filteredRoutes.push(<Route key={path} path={path} element={<Element />} />)
     })
 
