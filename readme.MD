@@ -39,6 +39,16 @@ import
 
 
 ----
+# Scripts
+## Create Entity
+
+
+run  `node node_modules/reactive-shared/createEntity.js entity`  where `entity` must be singular and lower. (ie: user, post, config)
+
+
+For run correctly, in your main repo must have `chalk` & `pluralize`. (`npm run --save-dev chalk pluralize`)
+
+----
 # Troubleshot
 ### How to solve react hooks problem in apps
 add this in `webpack.config` main app
@@ -49,4 +59,4 @@ resolve: {
 }
 ```
 
-for avoid `onlyText` lang issues, use these functions inside components tree. Do not create constants that use these functions outside components.... use `useMemo` for this 
+for avoid `onlyText` lang issues, use these functions inside components tree. Do NOT create constants that use these functions outside components.... use `useMemo` for this 

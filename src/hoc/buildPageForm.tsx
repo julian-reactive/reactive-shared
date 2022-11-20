@@ -52,7 +52,7 @@ export interface BuildPageFormProps {
   pageTitle?: string
   buildFormProps: BuildFormProps
   actions: ActionsProps
-  removeIdFromForm: boolean
+  removeIdFromForm?: boolean
 }
 // #endregion
 
