@@ -34,7 +34,6 @@ export const use{ENTITY_C}AppContext = (): HooksProps => {
 }
 
 export const {ENTITY_C}AppProvider = React.memo({ENTITY_C}AppProviderComponent)
-
 `
 
 const CONFIG_TYPES = `
@@ -82,7 +81,6 @@ const {ENTITY_C}Home: React.FC = () => {
 }
 
 export default React.memo({ENTITY_C}Home)
-
 `
 
 const PAGES_ADD_INDEX = `
@@ -129,7 +127,6 @@ const {ENTITY_C}PageAdd: React.FC = () => {
 }
 
 export default React.memo({ENTITY_C}PageAdd)
-
 `
 
 const PAGES_ADD_BUILDFORMPROPS = `
@@ -153,7 +150,6 @@ const buildFormProps: BuildFormProps = {
 }
 
 export default buildFormProps
-
 `
 
 const PAGES_LIST_INDEX = `
@@ -211,7 +207,6 @@ const {ENTITY_C}PageList: React.FC = () => {
 }
 
 export default React.memo({ENTITY_C}PageList)
-
 `
 
 const PAGES_LIST_ITEM = `
@@ -246,7 +241,6 @@ const {ENTITY_C}Item: React.FC<{ENTITY_C}ItemProps> = ({ item, onSelect }) => {
 }
 
 export default React.memo({ENTITY_C}Item)
-
 `
 
 module.exports = {
