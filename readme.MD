@@ -43,7 +43,7 @@ import
 ## Create Entity
 
 
-run  `node node_modules/reactive-shared/createEntity.js entity`  where `entity` must be singular and lower. (ie: user, post, config)
+run  `node node_modules/reactive-shared/scripts/createEntity.js entity`  where `entity` must be singular and lower. (ie: user, post, config)
 
 
 For run correctly, in your main repo must have `chalk` & `pluralize`. (`npm run --save-dev chalk pluralize`)
