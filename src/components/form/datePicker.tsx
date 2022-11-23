@@ -1,10 +1,10 @@
 // Libraries
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 
 // Material Components
 import TextField from '@mui/material/TextField'
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 
 // Shared
@@ -16,18 +16,29 @@ const SharedDatePicker: React.FC<BuildInputProps> = ({
     field
   },
   inputProps: {
-    label
+    label,
+    ...inputProps
   }
 }) => {
+  const [value, setValue] = useState(inputProps.value)
   const renderLabel = useLabel(label)
 
+  const handleChange = useCallback(value => {
+    setValue(value)
+    field.onChange(value)
+  }, [])
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterMoment}>
       <MobileDatePicker
         {...field}
         label={renderLabel}
-        inputFormat='yyyy-MM-dd'
-        renderInput={(params) => <TextField {...params} sx={{ width: 1 }} />}
+        inputFormat='yyyy-MM-DD'
+        value={value}
+        onChange={handleChange}
+        renderInput={(params) => {
+          return <TextField {...params} sx={{ width: 1, mt: 2 }} />
+        }}
       />
     </LocalizationProvider>
   )
