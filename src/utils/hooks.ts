@@ -17,6 +17,10 @@ export const useLabel = (label: string | (() => string)): string => {
     if (typeof label === 'string') {
       const text = onlyText(label)
 
+      if (typeof text !== 'string') {
+        throw new Error(`label ${label.toString()} is not a string`)
+      }
+
       if (text.startsWith('#') && text.endsWith('#')) {
         return text.slice(2, -2)
       }
