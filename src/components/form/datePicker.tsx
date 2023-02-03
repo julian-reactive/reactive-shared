@@ -1,5 +1,6 @@
 // Libraries
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
+import isEqual from 'lodash/isEqual'
 
 // Material Components
 import TextField from '@mui/material/TextField'
@@ -8,7 +9,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 
 // Shared
-import { useLabel } from '../../utils'
+import { useLabel, usePreviousValue } from '../../utils'
 import { BuildInputProps } from './buildInput'
 
 const SharedDatePicker: React.FC<BuildInputProps> = ({
@@ -20,13 +21,22 @@ const SharedDatePicker: React.FC<BuildInputProps> = ({
     ...inputProps
   }
 }) => {
+  const previousValue = usePreviousValue(inputProps.value)
+
   const [value, setValue] = useState(inputProps.value)
   const renderLabel = useLabel(label)
 
-  const handleChange = useCallback(value => {
+  const handleChange = useCallback((value: any) => {
     setValue(value)
     field.onChange(value)
   }, [])
+
+  useEffect(() => {
+    if (!isEqual(previousValue, value)) {
+      field.onChange(value)
+      setValue(value)
+    }
+  }, [previousValue, value]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
