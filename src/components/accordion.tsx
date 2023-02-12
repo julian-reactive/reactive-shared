@@ -13,27 +13,23 @@ import Box from '@mui/material/Box'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 interface ItemsProps extends AccordionProps {
-  name: string
-}
-
-export interface SharedAccordionProps {
   /**
      * Array of {name, children}
      *
      * @param {string} name: title of accordion tab
-     * @param {ReactElement} children: component will be inside of accordion tab
+     * @param {ReactElement} children: inherited component. will be inside of accordion tab
      */
-  items: ItemsProps[]
+  name: string
 }
 
-const SharedAccordionComponent: React.FC<SharedAccordionProps> = ({ items }) => {
-  // const classes = useStyles()
+export type SharedAccordionProps = { items?: ItemsProps[] } | null
 
+const SharedAccordionComponent: React.FC<SharedAccordionProps> = props => {
   return (
     <Paper>
-      {map(items, ({ name, children, ...props }, itemIdx) => (
+      {map(props?.items, ({ name, children, ...props }, itemIdx) => (
         <Accordion
-          key={`common-accordion-item-${itemIdx}`}
+          key={`common-accordion-item-${itemIdx}-${name}-${props.id}`}
           {...props}
         >
           <AccordionSummary

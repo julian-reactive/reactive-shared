@@ -13,7 +13,13 @@ import FormHelperText from '@mui/material/FormHelperText'
 import { BuildInputProps } from './buildInput'
 import { onlyText, usePreviousValue, useLabel } from '../../utils'
 
-const SharedSelect: React.FC<BuildInputProps> = ({
+type SelectProps = BuildInputProps & {
+  inputProps: {
+    native? :boolean
+  }
+}
+
+const SharedSelect: React.FC<SelectProps> = ({
   renderProps: {
     field: {
       onChange: onChangeField,
@@ -28,7 +34,8 @@ const SharedSelect: React.FC<BuildInputProps> = ({
     items = [],
     onChange,
     disabled,
-    value
+    value,
+    native = false
   }
 }) => {
   const previousValue = usePreviousValue(value)
@@ -44,16 +51,19 @@ const SharedSelect: React.FC<BuildInputProps> = ({
     if (typeof onChange === 'function') {
       onChange(value)
     }
-  }, [])// eslint-disable-line react-hooks/exhaustive-deps
+  }, [onChangeField, onChange])
 
   const renderOptions = useMemo(() => {
     return items.map(({ label, value, disabled = false }) => {
       const renderLabel = typeof label === 'function' ? label() : label
+
+      if (native) return <option key={renderLabel} value={value} disabled={disabled}>{renderLabel}</option>
+
       return (
         <MenuItem key={renderLabel} value={value} disabled={disabled}>{renderLabel}</MenuItem>
       )
     })
-  }, [items])
+  }, [items, native])
 
   const renderValue = useCallback((selected: any) => {
     if (items.length === 0) return ''
@@ -80,6 +90,8 @@ const SharedSelect: React.FC<BuildInputProps> = ({
 
   const renderLabel = useLabel(label)
 
+  const defaultSelect = onlyText('FORM.LABEL.DEFAULT_SELECT')
+
   useEffect(() => {
     if (!isEqual(previousValue, value)) {
       onChangeField(value)
@@ -92,15 +104,14 @@ const SharedSelect: React.FC<BuildInputProps> = ({
       <InputLabel sx={{ bgcolor: 'white', px: 1 }} id={`id-select-${renderLabel.toLowerCase()}`}>{renderLabel}</InputLabel>
       <Select
         {...field}
+        native={native}
         labelId={`id-select-${renderLabel.toLowerCase()}`}
         disabled={disabled}
         value={inputValue}
         renderValue={renderValue}
         onChange={handleOnChange}
       >
-        <MenuItem>
-          <em>{onlyText('FORM.LABEL.DEFAULT_SELECT')}</em>
-        </MenuItem>
+        {native ? (<option>{defaultSelect}</option>) : (<MenuItem><em>{defaultSelect}</em></MenuItem>)}
         {renderOptions}
       </Select>
       {renderHelpText}
