@@ -1,6 +1,7 @@
 import React, { ReactNode, useState, useContext, ReactElement } from 'react'
 import { QueryClientProvider, QueryClient } from 'react-query'
-// import { ReactQueryDevtools } from 'react-query/devtools'
+import { ReactQueryDevtools } from 'react-query/devtools'
+
 // SnackBar
 import { SnackBar, TypeSnackBar } from '../components'
 // import { AxiosResponse } from 'axios'
@@ -31,7 +32,7 @@ const queryClient = new QueryClient({
 
 const AppContext = React.createContext<AppContextProps | undefined>(undefined)
 
-const AppProviderComponent: React.FC<{ children?: ReactNode }> = ({ children }): ReactElement => {
+const AppProviderComponent: React.FC<{ children?: ReactNode, debugReactQuery?: boolean }> = ({ children, debugReactQuery = false }): ReactElement => {
   const [status, setStatus] = useState<TypeStatus>()
   const [snackBarMessage, setSnackBarMessage] = useState<TypeSnackBar>()
   const [pageTitle, setPageTitle] = useState('')
@@ -50,7 +51,7 @@ const AppProviderComponent: React.FC<{ children?: ReactNode }> = ({ children }):
       <QueryClientProvider client={queryClient}>
         {children}
         <SnackBar />
-        {/* <ReactQueryDevtools /> */}
+        {debugReactQuery && <ReactQueryDevtools />}
 
       </QueryClientProvider>
     </AppContext.Provider>

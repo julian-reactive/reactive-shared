@@ -53,6 +53,7 @@ export interface InputProps {
   value?: any
   incomingValue?: any
   showInput?: boolean
+  native?: boolean
 }
 
 export interface RenderProps {

@@ -37,7 +37,7 @@ export interface HooksProps {
   [key: string]: any
 }
 
-interface AdditionalEndpointsProps {
+export interface AdditionalEndpointsProps {
   name: string
   endpoint: string
   type: 'GET' | 'POST'
