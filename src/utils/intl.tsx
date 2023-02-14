@@ -66,9 +66,9 @@ export const onlyText: OnlyTextProps = (langKey, replace = undefined, noCache = 
     return text
   }
 
-  if (!isObject(replace)) {
-    throw new Error(`Intl Error ->> Bad Replace structure in ---> ${langKey}`)
-  }
+  // if (!isObject(replace)) {
+  //   throw new Error(`Intl Error ->> Bad Replace structure in ---> ${langKey}`)
+  // }
 
   if (replacedCached[langKey] !== undefined) {
     return replacedCached[langKey]

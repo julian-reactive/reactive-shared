@@ -19,7 +19,7 @@ interface TabPanelProps {
   value: number
 }
 
-interface AppTabsProps {
+export interface AppTabsProps {
   value?: number
   tabsHeader: Array<number | string>
   tabsBody: ReactElement[] | string[]

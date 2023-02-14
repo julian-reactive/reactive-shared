@@ -1,12 +1,10 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true
+    es2021: true,
+    'jest/globals': true
   },
-  extends: [
-    'plugin:react/recommended',
-    'standard'
-  ],
+  extends: ['plugin:react/recommended', 'standard', 'plugin:storybook/recommended'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -15,16 +13,11 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module'
   },
-  plugins: [
-    'react',
-    '@typescript-eslint',
-    'react-hooks'
-  ],
-  rules: {
-  },
+  plugins: ['react', '@typescript-eslint', 'react-hooks', 'jest'],
+  rules: {},
   settings: {
     react: {
       version: 'detect'
     }
   }
-}
+};

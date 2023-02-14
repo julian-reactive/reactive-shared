@@ -13,7 +13,7 @@ import RemoveIcon from '@mui/icons-material/Remove'
 // Shared
 import { onlyText } from '../utils'
 
-interface AmountComponentProps {
+export interface AmountComponentProps {
   onPlus: (value: number) => void
   onMinus: (value: number) => void
   maxValue: number
