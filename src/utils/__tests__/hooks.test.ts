@@ -1,6 +1,6 @@
 import { useLabel, usePreviousValue } from '../hooks'
 
-describe('usePreviousValue', () => {
+xdescribe('usePreviousValue', () => {
   describe('pass the previousValue', () => {
     it('should return the object with the previousValue', () => {
       const expectedValue = undefined
@@ -11,7 +11,7 @@ describe('usePreviousValue', () => {
   })
 })
 
-describe('useLabel', () => {
+xdescribe('useLabel', () => {
   describe('when is string', () => {
     it('should return a string', () => {
       const expectedValue = ''

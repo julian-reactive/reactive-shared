@@ -42,7 +42,7 @@ type DefaultUseQueryProps = () => {
 type HandleInputChangeProps = (event: React.SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => void
 type HandleChangeProps = (event: SyntheticEvent<Element, Event>, value: any, reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<any> | undefined) => void
 
-const defaultUseQuery: DefaultUseQueryProps = () => {
+export const defaultUseQuery: DefaultUseQueryProps = () => {
   return {
     isLoading: false,
     data: [],

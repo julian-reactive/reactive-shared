@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`itemName should match snapshot 1`] = `
+<div
+  class="MuiAvatar-root MuiAvatar-square css-j9wkuc-MuiAvatar-root"
+>
+  <img
+    alt="test"
+    class="MuiAvatar-img css-1pqm26d-MuiAvatar-img"
+    src="test"
+  />
+</div>
+`;
