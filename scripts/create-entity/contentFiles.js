@@ -87,6 +87,7 @@ const PAGES_ADD_INDEX = `
 // Libraries
 import React, { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import cloneDeep from 'lodash/cloneDeep'
 
 // Shared
 import {
@@ -120,7 +121,7 @@ const {ENTITY_C}PageAdd: React.FC = () => {
   return (
     <BuildPageForm
       entity='{ENTITY_U}'
-      buildFormProps={buildFormProps}
+      buildFormProps={cloneDeep(buildFormProps)}
       actions={actions}
     />
   )
