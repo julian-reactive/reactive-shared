@@ -16,6 +16,7 @@ import Radio from './radio'
 import Select from './select'
 import SelectMultiple from './selectMultiple'
 import DatePicker from './datePicker'
+import DateTimePicker from './datetimePicker'
 import NumberFormat from './numberFormat'
 import Checkbox from './checkbox'
 import Switch from './switch'
@@ -24,7 +25,7 @@ import { OnlyTextProps } from '../../utils'
 
 // Interfaces
 type HTMLTypeProps = 'checkbox' | 'radio' | 'select' | 'selectMultiple' | 'text' | 'textarea' | 'password' | 'email' | 'number' | 'switch'
-type SharedTypeProps = 'numberFormat' | 'divider' | 'datePicker' | 'component'
+type SharedTypeProps = 'numberFormat' | 'divider' | 'datePicker' | 'dateTimePicker' | 'component'
 type TypeProps = HTMLTypeProps | SharedTypeProps
 
 export interface InputProps {
@@ -54,6 +55,7 @@ export interface InputProps {
   incomingValue?: any
   showInput?: boolean
   native?: boolean
+  [k: string]: unknown
 }
 
 export interface RenderProps {
@@ -84,6 +86,7 @@ export const defaultInputProps: BuildInputProps = {
       isDirty: false
     },
     formState: {
+      isLoading: false,
       isDirty: false,
       dirtyFields: {},
       isSubmitted: false,
@@ -113,6 +116,8 @@ const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps):
       return (<Box sx={{ mt: 2, mb: 2 }}> <Divider /> </Box>)
     case 'datePicker':
       return (<DatePicker {...props} />)
+    case 'dateTimePicker':
+      return (<DateTimePicker {...props} />)
     case 'radio':
       return (<Radio {...props} />)
     case 'select':

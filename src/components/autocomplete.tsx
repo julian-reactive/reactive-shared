@@ -84,7 +84,7 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
         label={renderLabel}
         InputProps={{
           ...params.InputProps,
-          startAdornment: startAdornment,
+          startAdornment,
           endAdornment: (
             <>
               {Boolean(isLoading) && (<CircularProgress color='inherit' size={20} />)}
@@ -130,7 +130,7 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
       return undefined
     }
 
-    if (data?.data?.length > 0) {
+    if (data?.data) {
       setInputOptions(data.data)
     }
   }, [data, useQuery])
