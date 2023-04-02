@@ -31,6 +31,7 @@ export interface AutocompleteProps{
   useFormProps?: any
   sx?: {[k: string]: any}
   size?: 'small' | 'medium'
+  displayField?: string
 }
 
 type DefaultUseQueryProps = () => {
@@ -58,6 +59,7 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
   renderProps,
   onChange,
   useFormProps, // eslint-disable-line @typescript-eslint/no-unused-vars
+  displayField = 'name',
   ...props
 }) => {
   const { field: fieldProps, fieldState: { error } } = renderProps
@@ -109,21 +111,20 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
 
   const handleInputChange = useCallback<HandleInputChangeProps>((_evt, value) => {
     setInputValue(value)
-    onChangeField(value)
 
-    if (value.length < 2) {
-      return undefined
-    }
+    if (value.length < 2) return undefined
+
     debounceSearch.current()
   }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
   // if a value is updated
   useEffect(() => {
     if (value === undefined || value === null) return undefined
-    setInputValue(value)
+
+    setInputValue(value[displayField])
 
     onChangeField(value)
-  }, [value])// eslint-disable-line react-hooks/exhaustive-deps
+  }, [value, displayField])// eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (Object.is(useQuery, defaultUseQuery)) {

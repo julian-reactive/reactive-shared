@@ -29,12 +29,6 @@ import { Intl, onlyText } from '../../utils'
 import BuildInput, { InputProps, RenderProps } from './buildInput'
 
 // #region
-
-// Types
-interface tAnyObject {
-  [key: string]: any
-}
-
 // Interfaces
 export interface BuildFormInputProps {
   name: string
@@ -45,6 +39,8 @@ export interface BuildFormInputProps {
 
 export interface InputsFormConfigProps { [key: string]: InputProps }
 
+export type RenderBuildInputProps = (renderPros: RenderProps, inputProps: InputProps, useFormProps: any) => any
+
 export interface BuildFormProps {
   loading?: boolean
   noBackButton?: boolean
@@ -53,11 +49,9 @@ export interface BuildFormProps {
   confirmButtonLangkey?: string
   inputsFormConfig: InputsFormConfigProps
   responseErrors?: { [key: string]: string }
-  onSubmit?: (arg0: tAnyObject) => void
+  onSubmit?: (arg0: {[key: string]: any}) => void
   defaultSuccessMessage?: boolean
 }
-
-export type RenderBuildInputProps = (renderPros: RenderProps, inputProps: InputProps, useFormProps: any) => any
 
 // #endregion
 
@@ -106,6 +100,12 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
       }
     }
   }, [navigate, backTo, open, isDirty])
+
+  const handleOnSubmit = useCallback((evt: React.SyntheticEvent) => {
+    evt.preventDefault()
+    evt.stopPropagation()
+    return handleSubmit(onSubmit!)(evt)
+  }, [])
 
   const buildForm = useMemo(() => {
     return map(inputsFormConfig, ({
@@ -208,7 +208,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   }, [responseErrors, setError])
 
   return (
-    <form autoComplete='off' data-testid='form' onSubmit={handleSubmit(onSubmit!)}>
+    <form autoComplete='off' data-testid='form' onSubmit={handleOnSubmit}>
       <Box>
         {buildForm}
       </Box>
