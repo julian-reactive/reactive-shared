@@ -55,6 +55,7 @@ export interface InputProps {
   incomingValue?: any
   showInput?: boolean
   native?: boolean
+  fullWidth?: boolean
   [k: string]: unknown
 }
 

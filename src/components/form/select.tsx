@@ -35,7 +35,8 @@ const SharedSelect: React.FC<SelectProps> = ({
     onChange,
     disabled,
     value,
-    native = false
+    native = false,
+    fullWidth = true
   }
 }) => {
   const previousValue = usePreviousValue(value)
@@ -100,7 +101,7 @@ const SharedSelect: React.FC<SelectProps> = ({
   }, [previousValue, value]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <FormControl fullWidth error={Boolean(error)} required={required} sx={{ mt: 2 }}>
+    <FormControl fullWidth={fullWidth} error={Boolean(error)} required={required} sx={{ mt: 2 }}>
       <InputLabel sx={{ bgcolor: 'white', px: 1 }} id={`id-select-${renderLabel.toLowerCase()}`}>{renderLabel}</InputLabel>
       <Select
         {...field}

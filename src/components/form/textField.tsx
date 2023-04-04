@@ -18,7 +18,7 @@ import { BuildInputProps } from './buildInput'
 // Styles
 import { sxTextField } from './styles'
 
-const SharedTextField: React.FC<BuildInputProps> = ({
+const SharedTextFieldComponent: React.FC<BuildInputProps> = ({
   renderProps: {
     field,
     fieldState: { error }
@@ -92,24 +92,25 @@ const SharedTextField: React.FC<BuildInputProps> = ({
 
   return (
     <TextField
+      fullWidth
+      margin='normal'
       {...inputProps}
       {...field}
       inputRef={field.ref}
       onChange={handleChange}
       value={inputValue}
-      fullWidth
-      margin='normal'
       sx={{ ...sxTextField, ...sx }}
       label={renderLabel}
       error={Boolean(error)}
       helperText={getHelperText}
       InputProps={{
-        ...InputProps,
         startAdornment: renderStartAdornment,
-        endAdornment: renderEndAdornment
+        endAdornment: renderEndAdornment,
+        ...InputProps
       }}
     />
   )
 }
+export const SharedTextField = React.memo(SharedTextFieldComponent)
 
 export default React.memo(SharedTextField)
