@@ -59,7 +59,7 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
   renderProps,
   onChange,
   useFormProps, // eslint-disable-line @typescript-eslint/no-unused-vars
-  displayField = 'name',
+  displayField = 'name', // this is when the value is updated and want to show the object[displayField] value
   ...props
 }) => {
   const { field: fieldProps, fieldState: { error } } = renderProps
@@ -136,6 +136,10 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
     }
   }, [data, useQuery])
 
+  useEffect(() => {
+    setInputOptions(options)
+  }, [options])
+
   return (
     <MaterialAutocomplete
       {...props}
@@ -153,4 +157,4 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
   )
 }
 
-export const Autocomplete = React.memo(SharedAutocomplete)
+export const Autocomplete = SharedAutocomplete

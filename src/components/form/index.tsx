@@ -241,4 +241,4 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   )
 }
 
-export const CreateForm = React.memo(CreateFormContainer)
+export const CreateForm = CreateFormContainer
