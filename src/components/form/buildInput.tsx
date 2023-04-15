@@ -128,7 +128,10 @@ const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps):
     case 'switch':
       return (<Switch {...props} />)
     case 'component':
-      if (props.inputProps.component !== undefined) return props.inputProps.component(props)
+      if (props.inputProps.component !== undefined) {
+        const Component = props.inputProps.component
+        return (<Component {...props} />)
+      }
 
       return (<span>______NO_COMPONENT______</span>)
     default:
@@ -136,6 +139,6 @@ const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps):
   }
 }
 
-export const BuildInput = React.memo(BuildInputComponent)
+export const BuildInput = BuildInputComponent
 
 export default BuildInput
