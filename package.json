@@ -46,7 +46,7 @@
     "axios": "0.27.2",
     "chalk": "^5.1.2",
     "pluralize": "^8.0.0",
-    "react-hook-form": "^7.43.1",
+    "react-hook-form": "^7.43.9",
     "react-number-format": "^4.9.3",
     "react-query": "3.39.1"
   },

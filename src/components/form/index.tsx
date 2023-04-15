@@ -49,7 +49,7 @@ export interface BuildFormProps {
   confirmButtonLangkey?: string
   inputsFormConfig: InputsFormConfigProps
   responseErrors?: { [key: string]: string }
-  onSubmit?: (arg0: {[key: string]: any}) => void
+  onSubmit?: (formData: {[key: string]: any}) => any
   defaultSuccessMessage?: boolean
 }
 
@@ -74,7 +74,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
       [name]: yupValidation
     }), {})
 
-    return object().shape(fields)
+    return object().shape(fields).required()
   })
 
   const {
