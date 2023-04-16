@@ -16,12 +16,12 @@ import { onlyText } from '../utils'
 interface AmountComponentProps {
   onPlus: (value: number) => void
   onMinus: (value: number) => void
-  maxValue: number
+  maxValue?: number
   minValue?: number
   initialValue?: number
 }
 
-const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxValue, minValue = 0, initialValue = 0 }) => {
+const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxValue = Number.MAX_SAFE_INTEGER, minValue = 0, initialValue = 0 }) => {
   const [amount, setAmount] = useState(initialValue)
 
   const handlePlus = useCallback(() => {
@@ -45,7 +45,7 @@ const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxV
   }, [onMinus, amount, minValue])
 
   return (
-    <Box sx={{display:'flex', justifyContent:'center', py: 1}}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', py: 1 }}>
       <Fab
         aria-label='remove 1 unit amount'
         color='secondary'

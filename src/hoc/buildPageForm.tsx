@@ -53,6 +53,7 @@ export interface BuildPageFormProps {
   buildFormProps: BuildFormProps
   actions: ActionsProps
   removeIdFromForm?: boolean
+  onBackAction?: () => void
 }
 // #endregion
 
@@ -60,6 +61,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
   entity,
   pageTitle = '',
   removeIdFromForm = false,
+  onBackAction,
   buildFormProps: {
     defaultSuccessMessage = true,
     noBackButton = false,
@@ -185,6 +187,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
           loading={adding}
           disabled={disabled}
           noBackButton={noBackButton}
+          onBackAction={onBackAction}
           confirmButtonLangkey={confirmButtonText}
           inputsFormConfig={formData}
           responseErrors={errors}

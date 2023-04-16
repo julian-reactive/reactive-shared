@@ -44,6 +44,7 @@ export type RenderBuildInputProps = (renderPros: RenderProps, inputProps: InputP
 export interface BuildFormProps {
   loading?: boolean
   noBackButton?: boolean
+  onBackAction?: () => void
   backTo?: string | null
   disabled?: boolean
   confirmButtonLangkey?: string
@@ -58,6 +59,7 @@ export interface BuildFormProps {
 const CreateFormContainer: React.FC<BuildFormProps> = ({
   loading,
   noBackButton = false,
+  onBackAction,
   backTo = '',
   disabled,
   confirmButtonLangkey = '',
@@ -95,6 +97,8 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     } else {
       if (backTo) {
         navigate(backTo)
+      } else if (onBackAction) {
+        onBackAction()
       } else {
         navigate(-1)
       }

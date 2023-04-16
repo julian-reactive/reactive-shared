@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState, useEffect, SyntheticEvent } from 'react'
 import debounce from 'lodash/debounce'
 import get from 'lodash/get'
+import isEqual from 'lodash/isEqual'
 
 // Material
 import MaterialAutocomplete, { AutocompleteChangeDetails, AutocompleteChangeReason, AutocompleteInputChangeReason } from '@mui/material/Autocomplete'
@@ -8,7 +9,7 @@ import TextField from '@mui/material/TextField'
 import CircularProgress from '@mui/material/CircularProgress'
 
 // Shared
-import { useLabel } from '../utils'
+import { useLabel, usePreviousValue } from '../utils'
 
 // Interfaces
 export interface AutocompleteProps{
@@ -77,6 +78,8 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
     1500
   ))
 
+  const prevOptions = usePreviousValue(options)
+
   const renderLabel = useLabel(label)
 
   const renderInput = useCallback((params: any) => {
@@ -137,8 +140,8 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
   }, [data, useQuery])
 
   useEffect(() => {
-    setInputOptions(options)
-  }, [options])
+    if (!isEqual(options, prevOptions)) setInputOptions(options)
+  }, [options, prevOptions])
 
   return (
     <MaterialAutocomplete
@@ -157,4 +160,4 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
   )
 }
 
-export const Autocomplete = SharedAutocomplete
+export const Autocomplete = React.memo(SharedAutocomplete)

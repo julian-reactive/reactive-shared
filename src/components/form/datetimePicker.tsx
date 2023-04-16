@@ -4,7 +4,7 @@ import isEqual from 'lodash/isEqual'
 
 // Material Components
 import TextField from '@mui/material/TextField'
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 
@@ -24,6 +24,7 @@ const SharedDateTimePicker: React.FC<BuildInputProps> = ({
   const previousValue = usePreviousValue(inputProps.value)
 
   const [value, setValue] = useState(inputProps.value)
+
   const renderLabel = useLabel(label)
 
   const handleChange = useCallback((value: any) => {
@@ -40,11 +41,13 @@ const SharedDateTimePicker: React.FC<BuildInputProps> = ({
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <DateTimePicker
+      <MobileDateTimePicker
         {...field}
         {...inputProps}
         label={renderLabel}
         inputFormat='yyyy-MM-DD hh:mm a'
+        mask="____-__-__ __:__ _M"
+        disableMaskedInput
         value={value}
         onChange={handleChange}
         renderInput={(params) => {
