@@ -19,7 +19,7 @@ type SelectProps = BuildInputProps & {
   }
 }
 
-const SharedSelect: React.FC<SelectProps> = ({
+export const SharedSelect: React.FC<SelectProps> = ({
   renderProps: {
     field: {
       onChange: onChangeField,
@@ -36,7 +36,9 @@ const SharedSelect: React.FC<SelectProps> = ({
     disabled,
     value,
     native = false,
-    fullWidth = true
+    fullWidth = true,
+    formControlSx = {},
+    size = 'medium'
   }
 }) => {
   const previousValue = usePreviousValue(value)
@@ -101,7 +103,7 @@ const SharedSelect: React.FC<SelectProps> = ({
   }, [previousValue, value]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <FormControl fullWidth={fullWidth} error={Boolean(error)} required={required} sx={{ mt: 2 }}>
+    <FormControl fullWidth={fullWidth} error={Boolean(error)} required={required} sx={{ mt: 2, ...formControlSx }} size={size}>
       <InputLabel sx={{ bgcolor: 'white', px: 1 }} id={`id-select-${renderLabel.toLowerCase()}`}>{renderLabel}</InputLabel>
       <Select
         {...field}

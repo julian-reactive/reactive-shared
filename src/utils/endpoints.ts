@@ -157,9 +157,9 @@ export const useCreateApi: UseCreateApiProps = (endpoint: string, additionalEndp
     const { refetchQueries = [] } = options
     const onSuccess = onSuccessMutate(client, [endpoint, ...refetchQueries])
 
-    if (id) return useMutation((params: ParamsProps) => api.put(`${endpoint}/${id}`, params), { ...options, onSuccess })
+    if (id) return useMutation((params: ParamsProps) => api.put(`${endpoint}/${id}`, params), { onSuccess, ...options })
 
-    return useMutation((params: ParamsProps) => api.post(endpoint, params), { ...options, onSuccess })
+    return useMutation((params: ParamsProps) => api.post(endpoint, params), { onSuccess, ...options })
   }
 
   const useDelete: UseDeleteProps = (options = {}) => {

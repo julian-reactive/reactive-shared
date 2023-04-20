@@ -75,7 +75,7 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
 
   const debounceSearch = useRef(debounce(
     () => refetch(),
-    1500
+    999
   ))
 
   const prevOptions = usePreviousValue(options)

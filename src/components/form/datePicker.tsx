@@ -12,12 +12,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { useLabel, usePreviousValue } from '../../utils'
 import { BuildInputProps } from './buildInput'
 
-const SharedDatePicker: React.FC<BuildInputProps> = ({
+const SharedDatePickerComponent: React.FC<BuildInputProps> = ({
   renderProps: {
     field
   },
   inputProps: {
     label,
+    size = 'medium',
+    onChange,
     ...inputProps
   }
 }) => {
@@ -29,6 +31,10 @@ const SharedDatePicker: React.FC<BuildInputProps> = ({
   const handleChange = useCallback((value: any) => {
     setValue(value)
     field.onChange(value)
+
+    if (typeof onChange === 'function') {
+      onChange(value)
+    }
   }, [])
 
   useEffect(() => {
@@ -48,11 +54,13 @@ const SharedDatePicker: React.FC<BuildInputProps> = ({
         value={value}
         onChange={handleChange}
         renderInput={(params) => {
-          return <TextField {...params} sx={{ width: 1, mt: 2 }} />
+          return <TextField {...params} sx={{ mt: 2 }} size={size} />
         }}
       />
     </LocalizationProvider>
   )
 }
 
-export default React.memo(SharedDatePicker)
+export const SharedDatePicker = SharedDatePickerComponent
+
+export default React.memo(SharedDatePickerComponent)
