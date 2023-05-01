@@ -76,7 +76,7 @@ type OnSuccessMutateProps = (client: QueryClient, queries: string[]) => () => Pr
 // #endregion
 
 const onSuccessMutate: OnSuccessMutateProps = (client, queries) => async () => {
-  return await Promise.all(queries.map(async (query: any) => await client.refetchQueries(query)))
+  return await Promise.all(queries.map(async (query: any) => await client.invalidateQueries(query)))
 }
 
 const useCustomQuery: UseCustomQueryProps = (name, endpoint) => (queryParams = {}, options = {}) => {
