@@ -95,7 +95,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
     ...useQueryOptions
   })
 
-  const handleSubmit = useCallback((formData: {[k: string]: any}, evt: React.SyntheticEvent) => {
+  const handleSubmit = useCallback((formData: {[k: string]: any}) => {
     if (id !== '') {
       formData.id = id
     }

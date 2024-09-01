@@ -206,7 +206,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   useEffect(() => {
     if (!isEmpty(responseErrors)) {
       each(responseErrors, (error, name) => {
-        setError(name, { type: 'error', message: onlyText(`SERVER.VALIDATION.ERROR.${error[0]}`) })
+        setError(name, { type: 'error', message: onlyText(`SERVER.VALIDATION.ERROR.${error}`) })
       })
     }
   }, [responseErrors, setError])

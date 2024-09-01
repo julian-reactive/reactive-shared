@@ -22,9 +22,7 @@ export const initApi = (config: AxiosRequestConfig): void => {
       if (error.message === 'Network Error' || error?.response?.status === 500) {
         throw new Error('general-error')
       }
-      if (error?.response?.status === 404) {
-        throw new Error('not-found')
-      }
+
       if (error?.response?.status === 401) {
         throw new Error('forbidden')
       }
