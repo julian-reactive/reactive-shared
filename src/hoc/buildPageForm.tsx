@@ -29,6 +29,7 @@ export type UseMutateActionProps = (id: number | string, useMutateOptions: UseMu
 export type BeforeMutateActionProps = (formData: { [key: string]: any }, mutate: UseMutateFunction<unknown, unknown, unknown>) => void
 export type UseQueryActionProps = (params: { id: number | string, params: AnyParams | undefined }, options: UseQueryOptions & { idRequired: boolean }) => UseQueryResult
 export type AfterMutateActionProps = (id: number | string | null, mutateData: any, error: any) => void
+export type AfterQueryActionProps = (formData: AnyParams, data: AnyParams) => void
 
 export interface ActionsProps {
   /**
@@ -44,7 +45,7 @@ export interface ActionsProps {
   useQuery?: UseQueryActionProps
   useQueryParams?: AnyParams
   useQueryOptions?: UseQueryOptions
-  afterQuery?: (formData: AnyParams, data: AnyParams) => void
+  afterQuery?: AfterQueryActionProps
 }
 
 export interface BuildPageFormProps {
@@ -67,7 +68,8 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
     noBackButton = false,
     disabled = false,
     confirmButtonLangkey,
-    inputsFormConfig
+    inputsFormConfig,
+    formBoxProps = {}
   },
   actions: {
     beforeMutate,
@@ -192,6 +194,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
           inputsFormConfig={formData}
           responseErrors={errors}
           onSubmit={handleSubmit}
+          formBoxProps={formBoxProps}
         />
       </Box>
     </Paper>

@@ -51,7 +51,8 @@ export interface BuildFormProps {
   inputsFormConfig: InputsFormConfigProps
   responseErrors?: { [key: string]: string }
   onSubmit?: (formData: {[key: string]: any}) => any
-  defaultSuccessMessage?: boolean
+  defaultSuccessMessage?: boolean,
+  formBoxProps?: {[key: string]: any}
 }
 
 // #endregion
@@ -65,7 +66,8 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   confirmButtonLangkey = '',
   inputsFormConfig,
   responseErrors,
-  onSubmit
+  onSubmit,
+  formBoxProps = {}
 }) => {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -213,7 +215,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
 
   return (
     <form autoComplete='off' data-testid='form' onSubmit={handleOnSubmit}>
-      <Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }} {...formBoxProps}>
         {buildForm}
       </Box>
 
