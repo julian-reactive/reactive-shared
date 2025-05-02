@@ -1,6 +1,6 @@
 {
   "name": "reactive-shared",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "set of libraries for build apps based on lists and forms",
   "repository": {
     "type": "git",
@@ -47,6 +47,7 @@
     "chalk": "^5.1.2",
     "pluralize": "^8.0.0",
     "react-hook-form": "^7.43.9",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-number-format": "^4.9.3",
     "react-query": "3.39.1"
   },
