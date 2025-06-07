@@ -2,14 +2,14 @@ import { useRef, useEffect, useMemo } from 'react'
 
 import { onlyText } from '../utils/intl'
 
-export const usePreviousValue = <T extends undefined>(value: T): T | undefined => {
-  const ref = useRef()
+export const usePreviousValue = <T>(value: T): T => {
+  const ref = useRef<T>()
 
   useEffect(() => {
     ref.current = value
   }, [value])
 
-  return ref.current
+  return ref.current!
 }
 
 export const useLabel = (label: string | (() => string)): string => {

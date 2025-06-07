@@ -1,5 +1,6 @@
-import React, { useMemo, useCallback, useEffect, useState } from 'react'
+import React, { useMemo, useCallback, useLayoutEffect, useState } from 'react'
 import isEqual from 'lodash/isEqual'
+import isBoolean from 'lodash/isBoolean'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -28,9 +29,10 @@ const SharedCheckbox: React.FC<BuildInputProps> = ({
     value
   }
 }) => {
-  const previousValue = usePreviousValue(value)
+  const newValue = isBoolean(field.value) ? field.value : isBoolean(value) ? value : false
+  const previousValue = usePreviousValue(newValue)
 
-  const [checked, setChecked] = useState((field.value !== undefined && field.value) || value || false)
+  const [checked, setChecked] = useState(newValue)
 
   const handleChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
     const { checked } = evt.target
@@ -63,12 +65,12 @@ const SharedCheckbox: React.FC<BuildInputProps> = ({
 
   const renderLabel = useLabel(label)
 
-  useEffect(() => {
-    if (!isEqual(previousValue, value)) {
-      setChecked(value)
-      onChangeField(value)
+  useLayoutEffect(() => {
+    if (!isEqual(previousValue, newValue)) {
+      setChecked(newValue)
+      onChangeField(newValue)
     }
-  }, [previousValue, value])// eslint-disable-line react-hooks/exhaustive-deps
+  }, [previousValue, newValue])// eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Box sx={sx}>

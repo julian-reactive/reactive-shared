@@ -12,7 +12,7 @@ import Paper from '@mui/material/Paper'
 
 export interface AppTableProps extends TableProps {
   headItems: string[]
-  bodyItems: string[][]
+  bodyItems: any[][]
   size?: 'medium' | 'small'
   className?: string
 }

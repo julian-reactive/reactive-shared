@@ -167,7 +167,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   const [page, setPage] = useState<number>(1)
 
   const queryParams = useMemo(() => {
-    const params = merge({}, { page }, useQueryParams?.params, searchParams)
+    const params = merge({}, useQueryParams?.params, searchParams)
 
     if (infiniteScroll) {
       params.page = page

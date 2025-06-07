@@ -40,7 +40,7 @@ export interface HooksProps {
 export interface AdditionalEndpointsProps {
   name: string
   endpoint: string
-  type: 'GET' | 'POST'
+  type: 'GET' | 'POST' | 'PUT' | 'DELETE'
 }
 
 interface UseMutateOptionsProps {
@@ -72,21 +72,28 @@ type UseCustomQueryProps = (name: string, endpoint: string) => (queryParams: {id
 
 type UseCustomMutateProps = (endpoint: string) => (id: string | null, options: UseMutateOptionsProps) => any
 
-type OnSuccessMutateProps = (client: QueryClient, queries: string[]) => () => Promise<any>
+type OnSuccessMutateProps = (client: QueryClient, queries: string[]) => (args: { status: string }) => void
 // #endregion
 
-const onSuccessMutate: OnSuccessMutateProps = (client, queries) => async () => {
-  return await Promise.all(queries.map(async (query: any) => await client.invalidateQueries(query)))
+const onSuccessMutate: OnSuccessMutateProps = (client, queries) => async ({ status }) => {
+  if (status === 'error') return
+
+  await Promise.all(queries.map(async (query: any) => await client.invalidateQueries(query)))
 }
 
 const useCustomQuery: UseCustomQueryProps = (name, endpoint) => (queryParams = {}, options = {}) => {
   const { id = null, params = {} } = queryParams
 
   if (id !== null) {
-    return useReactQuery(name, () => api.get(`${endpoint}/${id}`), options)
+    if (endpoint.includes('{id}')) {
+      const newEndpoint = endpoint.replace('{id}', id)
+      return useReactQuery([name, newEndpoint], () => api.get(newEndpoint), options)
+    }
+
+    return useReactQuery([name, endpoint], () => api.get(`${endpoint}/${id}`), options)
   }
 
-  return useReactQuery(name, () => api.get(endpoint, { params }), options)
+  return useReactQuery([name, endpoint], () => api.get(endpoint, { params }), options)
 }
 
 const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null, options = {}) => {
@@ -95,7 +102,15 @@ const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null
   const onSuccess = onSuccessMutate(useQueryClient(), [endpoint, ...refetchQueries])
 
   return useMutation((params) => {
-    if (id) return api.put(`${endpoint}/${id}`, params)
+    if (id) {
+      if (endpoint.includes('{id}')) {
+        const newEndpoint = endpoint.replace('{id}', id)
+        return api.put(newEndpoint, params)
+      }
+
+      return api.put(`${endpoint}/${id}`, params)
+    }
+
     return api.post(endpoint, params)
   }, { onSuccess, ...options })
 }
@@ -157,7 +172,9 @@ export const useCreateApi: UseCreateApiProps = (endpoint: string, additionalEndp
     const { refetchQueries = [] } = options
     const onSuccess = onSuccessMutate(client, [endpoint, ...refetchQueries])
 
-    if (id) return useMutation((params: ParamsProps) => api.put(`${endpoint}/${id}`, params), { onSuccess, ...options })
+    if (id) {
+      return useMutation((params: ParamsProps) => api.put(`${endpoint}/${id}`, params), { onSuccess, ...options })
+    }
 
     return useMutation((params: ParamsProps) => api.post(endpoint, params), { onSuccess, ...options })
   }

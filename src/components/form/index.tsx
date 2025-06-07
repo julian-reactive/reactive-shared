@@ -107,7 +107,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     }
   }, [navigate, backTo, open, isDirty])
 
-  const handleOnSubmit = useCallback(() => (evt: React.SyntheticEvent) => {
+  const handleOnSubmit = useCallback((evt: React.SyntheticEvent) => {
     evt.preventDefault()
     evt.stopPropagation()
     return handleSubmit(onSubmit!)(evt)

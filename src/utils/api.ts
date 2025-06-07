@@ -26,6 +26,10 @@ export const initApi = (config: AxiosRequestConfig): void => {
       if (error?.response?.status === 401) {
         throw new Error('forbidden')
       }
+
+      if (error?.response?.status === 400) {
+        return error?.response?.data
+      }
     }
   )
 }

@@ -112,18 +112,26 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
     }
   }, [onChange])// eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleInputChange = useCallback<HandleInputChangeProps>((_evt, value) => {
+  const handleInputChange = useCallback<HandleInputChangeProps>((_evt, value, action) => {
     setInputValue(value)
+    onChangeField(value)
 
     if (value.length < 2) return undefined
+    if (action === 'reset') return undefined
 
     debounceSearch.current()
-  }, [])// eslint-disable-line react-hooks/exhaustive-deps
+  }, [autocompleteValue])// eslint-disable-line react-hooks/exhaustive-deps
 
   // if a value is updated
   useEffect(() => {
     if (value === undefined || value === null) return undefined
 
+    if (typeof value === 'string') {
+      setInputValue(value)
+      setAutocompleteValue(value)
+      onChangeField(value)
+      return undefined
+    }
     setInputValue(value[displayField])
 
     onChangeField(value)
