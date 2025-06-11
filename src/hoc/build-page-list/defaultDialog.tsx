@@ -165,7 +165,7 @@ const DefaultDialogComponent: React.FC<DefaultDialogProps> = ({ options, title, 
       onClose={onClose}
       open
     >
-      <DialogTitle id='default-dialog-title'>
+      <DialogTitle id='default-dialog-title' sx={{ '@media print': { display: 'none' } }}>
         {renderDialogTitle}
         <IconButton sx={sxCloseDialogButton} aria-label='close' onClick={onClose}>
           <CloseIcon fontSize='small' />
