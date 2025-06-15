@@ -135,6 +135,7 @@ export interface BuildPageListProps {
   itemComponentProps?: any
   tabs?: TabsProps
   SearchComponent?: any,
+  MiddleComponent?: any,
   search?: boolean,
   infiniteScroll?: boolean
 }
@@ -154,6 +155,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   ItemComponent,
   itemComponentProps,
   tabs,
+  MiddleComponent,
   SearchComponent,
   search = false,
   infiniteScroll = false
@@ -290,10 +292,6 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   ]
   )
 
-  const renderLoading = useMemo(() => {
-    if (loading === true || isLoading === true) return <Loading backdrop />
-  }, [loading, isLoading])
-
   const renderSearch = useMemo(() => {
     if (SearchComponent !== undefined) return <SearchComponent onSearch={setSearchParams} />
 
@@ -324,6 +322,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
       {renderButton}
       <Box>
         {renderSearch}
+        {MiddleComponent && <MiddleComponent />}
         {!!tabs && renderList}
         {infiniteScroll && !tabs && (
           <IScroll page={page} onNext={() => setPage((prev) => prev + 1)} items={renderList} />
@@ -334,7 +333,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
           </List>
         )}
       </Box>
-      {renderLoading}
+      {(loading === true || isLoading === true) && <Loading backdrop />}
     </Paper>
   )
 }

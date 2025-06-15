@@ -13,6 +13,7 @@ export const initApi = (config: AxiosRequestConfig): void => {
 
   api.interceptors.request.use(config => {
     set(config, 'headers.Authorization', `Bearer ${token}`)
+    set(config, 'headers.ngrok-skip-browser-warning', 'true')
     return config
   })
 
