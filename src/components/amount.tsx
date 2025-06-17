@@ -1,5 +1,5 @@
 // Libraries
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 
 // Material components
 import Box from '@mui/material/Box'
@@ -19,12 +19,22 @@ interface AmountComponentProps {
   maxValue?: number
   minValue?: number
   initialValue?: number
+  value?: number
+  textWidth?: string
+  disabled?: boolean
 }
 
-const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxValue = Number.MAX_SAFE_INTEGER, minValue = 0, initialValue = 0 }) => {
+const AmountComponent: React.FC<AmountComponentProps> = ({ disabled = false, onPlus, onMinus, maxValue = Number.MAX_SAFE_INTEGER, minValue = 0, initialValue = 0, value: parentValue, textWidth = '40%' }) => {
   const [amount, setAmount] = useState(initialValue)
 
   const handlePlus = useCallback(() => {
+    if (parentValue !== undefined) {
+      if (parentValue < maxValue) {
+        onPlus(parentValue + 1)
+      }
+      return undefined
+    }
+
     setAmount(value => {
       if (value < maxValue) {
         value = value + 1
@@ -32,9 +42,16 @@ const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxV
       }
       return value
     })
-  }, [onPlus, maxValue])
+  }, [onPlus, maxValue, parentValue])
 
   const handleMinus = useCallback(() => {
+    if (parentValue !== undefined) {
+      if (parentValue > minValue) {
+        onMinus(parentValue - 1)
+      }
+      return undefined
+    }
+
     setAmount(value => {
       if (amount > minValue) {
         value = value - 1
@@ -42,7 +59,17 @@ const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxV
       }
       return value
     })
-  }, [onMinus, amount, minValue])
+  }, [onMinus, amount, minValue, parentValue])
+
+  useEffect(() => {
+    setAmount(initialValue)
+  }, [initialValue])
+
+  useEffect(() => {
+    if (parentValue !== undefined) {
+      setAmount(parentValue)
+    }
+  }, [parentValue])
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', py: 1 }}>
@@ -51,12 +78,13 @@ const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxV
         color='secondary'
         onClick={handleMinus}
         size='small'
+        disabled={disabled}
       >
         <RemoveIcon fontSize='small' />
       </Fab>
 
       <TextField
-        sx={{ px: 1, width: '40%' }}
+        sx={{ px: 1, width: textWidth }}
         label={onlyText('FORM.LABEL.AMOUNT')}
         variant="outlined"
         value={amount}
@@ -69,6 +97,7 @@ const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxV
         color='primary'
         onClick={handlePlus}
         size='small'
+        disabled={disabled}
       >
         <AddIcon fontSize='small' />
       </Fab>
@@ -76,4 +105,4 @@ const AmountComponent: React.FC<AmountComponentProps> = ({ onPlus, onMinus, maxV
   )
 }
 
-export const SharedAmount = React.memo(AmountComponent)
+export const SharedAmount = AmountComponent

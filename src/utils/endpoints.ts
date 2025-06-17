@@ -7,7 +7,7 @@ import {
   useQueryClient,
   // UseQueryOptions,
   UseQueryResult
-} from 'react-query'
+} from '@tanstack/react-query'
 
 import upperFirst from 'lodash/upperFirst'
 import isEmpty from 'lodash/isEmpty'
@@ -26,8 +26,8 @@ export interface ParamsProps {
 }
 
 export type HookResultProps = UseMutationResult<AxiosResponse, unknown, ParamsProps | undefined> |
-UseMutationResult<AxiosResponse, unknown, ParamsProps> |
-UseQueryResult<AxiosResponse> | (() => void)
+  UseMutationResult<AxiosResponse, unknown, ParamsProps> |
+  UseQueryResult<AxiosResponse> | (() => void)
 
 interface ObjectStringProps {
   [key: string]: any
@@ -64,11 +64,11 @@ type UseMutateProps = (id: string | null, options: UseMutateOptionsProps) => any
 
 type UseDeleteProps = (options: UseMutateOptionsProps) => any
 
-type UseSetAdditionalEndpointsProps = (arg: {hooks: HooksProps, additionalEndpoints?: AdditionalEndpointsProps[]}) => void
+type UseSetAdditionalEndpointsProps = (arg: { hooks: HooksProps, additionalEndpoints?: AdditionalEndpointsProps[] }) => void
 
 type UseCreateApiProps = (endpoint: string, additionalEndpoints?: AdditionalEndpointsProps[]) => HooksProps
 
-type UseCustomQueryProps = (name: string, endpoint: string) => (queryParams: {id?: string, params?: ObjectStringProps}, options: ObjectStringProps) => any
+type UseCustomQueryProps = (name: string, endpoint: string) => (queryParams: { id?: string, params?: ObjectStringProps }, options: ObjectStringProps) => any
 
 type UseCustomMutateProps = (endpoint: string) => (id: string | null, options: UseMutateOptionsProps) => any
 
@@ -76,9 +76,9 @@ type OnSuccessMutateProps = (client: QueryClient, queries: string[]) => (args: {
 // #endregion
 
 const onSuccessMutate: OnSuccessMutateProps = (client, queries) => async ({ status }) => {
-  if (status === 'error') return
+  if (status !== 'success') return
 
-  await Promise.all(queries.map(async (query: any) => await client.invalidateQueries(query)))
+  await Promise.all(queries.map(async (query: any) => await client.invalidateQueries({ queryKey: query })))
 }
 
 const useCustomQuery: UseCustomQueryProps = (name, endpoint) => (queryParams = {}, options = {}) => {
@@ -87,32 +87,41 @@ const useCustomQuery: UseCustomQueryProps = (name, endpoint) => (queryParams = {
   if (id !== null) {
     if (endpoint.includes('{id}')) {
       const newEndpoint = endpoint.replace('{id}', id)
-      return useReactQuery([name, newEndpoint], () => api.get(newEndpoint), options)
+      return useReactQuery({ queryKey: [name, newEndpoint], queryFn: () => api.get(newEndpoint), ...options })
     }
 
-    return useReactQuery([name, endpoint], () => api.get(`${endpoint}/${id}`), options)
+    return useReactQuery({ queryKey: [name, endpoint], queryFn: () => api.get(`${endpoint}/${id}`), ...options })
   }
 
-  return useReactQuery([name, endpoint], () => api.get(endpoint, { params }), options)
+  return useReactQuery({ queryKey: [name, endpoint], queryFn: () => api.get(endpoint, { params }), ...options })
 }
 
 const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null, options = {}) => {
-  const { refetchQueries = [] } = options
+  const { refetchQueries = [], onSuccess } = options
 
-  const onSuccess = onSuccessMutate(useQueryClient(), [endpoint, ...refetchQueries])
+  const onSuccessMutation = onSuccessMutate(useQueryClient(), [endpoint, ...refetchQueries])
 
-  return useMutation((params) => {
-    if (id) {
-      if (endpoint.includes('{id}')) {
-        const newEndpoint = endpoint.replace('{id}', id)
-        return api.put(newEndpoint, params)
+  return useMutation({
+    mutationFn: (params) => {
+      if (id) {
+        if (endpoint.includes('{id}')) {
+          const newEndpoint = endpoint.replace('{id}', id)
+          return api.put(newEndpoint, params)
+        }
+
+        return api.put(`${endpoint}/${id}`, params)
       }
 
-      return api.put(`${endpoint}/${id}`, params)
-    }
-
-    return api.post(endpoint, params)
-  }, { onSuccess, ...options })
+      return api.post(endpoint, params)
+    },
+    onSuccess: () => {
+      onSuccessMutation({ status: 'success' })
+      if (onSuccess) {
+        onSuccess()
+      }
+    },
+    ...options
+  })
 }
 
 /* If `additionalEndpoints` comes, must be an array of {name, endpoint, type} and will be added as ´use${upperFirst(name)}´ hook */
@@ -173,17 +182,31 @@ export const useCreateApi: UseCreateApiProps = (endpoint: string, additionalEndp
     const onSuccess = onSuccessMutate(client, [endpoint, ...refetchQueries])
 
     if (id) {
-      return useMutation((params: ParamsProps) => api.put(`${endpoint}/${id}`, params), { onSuccess, ...options })
+      return useMutation({
+        mutationFn: (params: ParamsProps) => api.put(`${endpoint}/${id}`, params),
+        onSuccess,
+        ...options
+      })
     }
 
-    return useMutation((params: ParamsProps) => api.post(endpoint, params), { onSuccess, ...options })
+    return useMutation({
+      mutationFn: (params: ParamsProps) => api.post(endpoint, params),
+      onSuccess,
+      ...options
+    })
   }
 
   const useDelete: UseDeleteProps = (options = {}) => {
     const { refetchQueries = [] } = options
     const onSuccess = onSuccessMutate(client, [endpoint, ...refetchQueries])
 
-    return useMutation(({ id, ...options }: ParamsProps) => api.delete(`${endpoint}/${id ?? ''}`, options), { onSuccess, ...options })
+    return useMutation({
+      mutationFn: ({ id, ...params }: ParamsProps) => {
+        return api.delete(`${endpoint}/${id ?? ''}`, params)
+      },
+      onSuccess,
+      ...options
+    })
   }
 
   /**
@@ -204,10 +227,18 @@ export const useCreateApi: UseCreateApiProps = (endpoint: string, additionalEndp
     }
 
     if (id !== undefined) {
-      return useReactQuery([endpoint, id], async () => await api.get(`${endpoint}/${id}`, { params }), options)
+      return useReactQuery({
+        queryKey: [endpoint, id],
+        queryFn: () => api.get(`${endpoint}/${id}`, { params }),
+        ...options
+      })
     }
 
-    return useReactQuery([endpoint, params], async () => await api.get(endpoint, { params }), options)
+    return useReactQuery({
+      queryKey: [endpoint, params],
+      queryFn: () => api.get(endpoint, { params }),
+      ...options
+    })
   }
 
   const hooks: HooksProps = {

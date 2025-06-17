@@ -1,6 +1,6 @@
 import React, { ReactNode, useState, useContext, ReactElement } from 'react'
-import { QueryClientProvider, QueryClient } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 // SnackBar
 import { SnackBar, TypeSnackBar } from '../components'
@@ -24,8 +24,7 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      staleTime: 1000 * 60,
-      cacheTime: 1000 * 60
+      staleTime: 1000 * 60
     }
   }
 })

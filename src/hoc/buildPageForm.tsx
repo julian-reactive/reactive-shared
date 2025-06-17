@@ -89,7 +89,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
   const afterQueryCalled = useRef(false)
   const dataSet = useRef(false)
 
-  const { mutate, isSuccess, error, isLoading: adding, data: mutateData }: any = useMutate(newId, useMutateOptions)
+  const { mutate, isSuccess, error, isPending: adding, data: mutateData }: any = useMutate(newId, useMutateOptions)
 
   const { isLoading = false, data: queryData = {} }: any = useQuery({ id, params: useQueryParams }, {
     enabled: Boolean(id),
@@ -98,16 +98,16 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
   })
 
   const handleSubmit = useCallback((formData: {[k: string]: any}) => {
-    if (id !== '') {
-      formData.id = id
-    }
+    // if (id !== '') {
+    //   formData.id = id
+    // }
 
     if (beforeMutate != null) {
       beforeMutate(formData, mutate)
     } else {
       mutate(formData)
     }
-  }, [beforeMutate, mutate, id])
+  }, [beforeMutate, mutate])
 
   const errors = useMemo(() => {
     if (mutateData?.status === 'error') {
