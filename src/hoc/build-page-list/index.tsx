@@ -233,15 +233,13 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
         />
       )
     }
-  },
-    [
-      selectedItem,
-      dialogOptions,
-      dialogFullScreen,
-      handleOnClose,
-      DialogComponent
-    ]
-  )
+  }, [
+    selectedItem,
+    dialogOptions,
+    dialogFullScreen,
+    handleOnClose,
+    DialogComponent
+  ])
 
   const renderList = useMemo(() => {
     if (queryData === undefined) return []
@@ -315,6 +313,10 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
       setSnackBarMessage({ message: onlyText('GENERAL.ERROR'), severity: 'error' })
     }
   }, [error, setSnackBarMessage])
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
 
   return (
     <Paper>
