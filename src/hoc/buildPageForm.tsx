@@ -91,17 +91,16 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
 
   const { mutate, isSuccess, error, isPending: adding, data: mutateData }: any = useMutate(newId, useMutateOptions)
 
-  const { isLoading = false, data: queryData = {} }: any = useQuery({ id, params: useQueryParams }, {
-    enabled: Boolean(id),
-    idRequired: true,
-    ...useQueryOptions
-  })
+  const options = useMemo(() => {
+    return {
+      enabled: Boolean(id),
+      idRequired: true,
+      ...useQueryOptions
+    }
+  }, [id, useQueryOptions])
+  const { isLoading = false, data: queryData = {} }: any = useQuery({ id, params: useQueryParams }, options)
 
   const handleSubmit = useCallback((formData: {[k: string]: any}) => {
-    // if (id !== '') {
-    //   formData.id = id
-    // }
-
     if (beforeMutate != null) {
       beforeMutate(formData, mutate)
     } else {
@@ -178,7 +177,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
   [isSuccess, error, mutateData, id, afterMutate, setSnackBarMessage, defaultSuccessMessage]
   )
 
-  if (id !== '' && (isLoading === true || isEmpty(queryData))) {
+  if (options.enabled && id !== '' && (isLoading === true || isEmpty(queryData))) {
     return <Loading backdrop />
   }
 

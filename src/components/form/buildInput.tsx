@@ -107,6 +107,42 @@ export const defaultInputProps: BuildInputProps = {
   }
 }
 
+export const defaultProps = ({
+  onChange,
+  value,
+  name,
+  label,
+  type
+}: {
+  onChange: (value: string) => void,
+  value: number,
+  name: string,
+  label: string,
+  type: string
+}) => ({
+  ...defaultInputProps,
+  renderProps: {
+    ...defaultInputProps.renderProps,
+    field: {
+      ...defaultInputProps.renderProps.field,
+      onChange,
+      value,
+      name
+    }
+  },
+  inputProps: {
+    ...defaultInputProps.inputProps,
+    type,
+    label,
+    name,
+    value,
+    size: 'small',
+    sx: {
+      marginTop: '1px'
+    }
+  }
+})
+
 const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps): ReactElement => {
   switch (props.inputProps.type) {
     case 'checkbox':
