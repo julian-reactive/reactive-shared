@@ -142,9 +142,7 @@ const SharedAutocomplete: React.FC<AutocompleteProps> = ({
       return undefined
     }
 
-    if (data?.data) {
-      setInputOptions(data.data)
-    }
+    setInputOptions(data?.data || [])
   }, [data, useQuery])
 
   useEffect(() => {
