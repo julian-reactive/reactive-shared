@@ -3,6 +3,7 @@ import {
   ControllerRenderProps, UseFormStateReturn, ControllerFieldState
 } from 'react-hook-form'
 import merge from 'lodash/merge'
+import cloneDeep from 'lodash/cloneDeep'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -121,32 +122,36 @@ export const defaultProps = ({
   name: string,
   label: string,
   type: string
-} & BuildInputProps) => merge(
-  defaultInputProps,
-  {
-    renderProps: {
-      field: {
-        onChange,
+} & BuildInputProps) => {
+  const props = merge(
+    cloneDeep(defaultInputProps),
+    {
+      renderProps: {
+        field: {
+          onChange,
+          value,
+          name
+        }
+      }
+    },
+    {
+      inputProps: {
+        ...cloneDeep(defaultInputProps.inputProps),
+        type,
+        label,
+        name,
         value,
-        name
+        size: 'small',
+        sx: {
+          marginTop: '1px'
+        }
       }
-    }
-  },
-  {
-    inputProps: {
-      ...defaultInputProps.inputProps,
-      type,
-      label,
-      name,
-      value,
-      size: 'small',
-      sx: {
-        marginTop: '1px'
-      }
-    }
-  },
-  otherProps
-)
+    },
+    otherProps
+  )
+
+  return { ...props } as BuildInputProps
+}
 
 const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps): ReactElement => {
   switch (props.inputProps.type) {

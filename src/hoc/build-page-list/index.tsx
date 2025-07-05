@@ -34,6 +34,7 @@ import { useAppContext } from '../appContext'
 // Components
 import DefaultDialog from './defaultDialog'
 import IScroll from './infiniteScroll'
+import { SxProps } from '@mui/system'
 
 // Interfaces
 /**
@@ -128,6 +129,7 @@ export interface BuildPageListProps {
   /** translation string */
   pageTitle: string
   dialogOptions?: DialogOptionsProps
+  dialogProps?: SxProps
   dialogFullScreen?: boolean
   DialogComponent?: (props: { onClose: () => void, selectedItem: SelectedItemProps, title: string, dialogFullScreen: boolean }) => ReactElement
   loading?: boolean
@@ -149,6 +151,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   pageTitle,
   addText,
   dialogOptions,
+  dialogProps = {},
   dialogFullScreen = false,
   DialogComponent,
   loading,
@@ -225,6 +228,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
     if (dialogOptions !== undefined) {
       return (
         <DefaultDialog
+          dialogProps={dialogProps}
           dialogFullScreen={dialogFullScreen}
           onClose={handleOnClose}
           options={dialogOptions}
@@ -280,14 +284,14 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
       />
     ))
   },
-  [
-    queryData,
-    ItemComponent,
-    itemComponentProps,
-    handleSelectItem,
-    tabs,
-    page
-  ]
+    [
+      queryData,
+      ItemComponent,
+      itemComponentProps,
+      handleSelectItem,
+      tabs,
+      page
+    ]
   )
 
   const renderSearch = useMemo(() => {
