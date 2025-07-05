@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import {
   ControllerRenderProps, UseFormStateReturn, ControllerFieldState
 } from 'react-hook-form'
+import merge from 'lodash/merge'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -33,7 +34,7 @@ export interface InputProps {
   name: string
   label: string | (() => string)
   yupValidation?: any
-  icon?: OverridableComponent<SvgIconTypeMap>
+  icon?: OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & { muiName: string; }
   defaultValue?: any
   sx?: SxProps
   className?: string
@@ -112,36 +113,40 @@ export const defaultProps = ({
   value,
   name,
   label,
-  type
+  type,
+  ...otherProps
 }: {
   onChange: (value: string) => void,
   value: number,
   name: string,
   label: string,
   type: string
-}) => ({
-  ...defaultInputProps,
-  renderProps: {
-    ...defaultInputProps.renderProps,
-    field: {
-      ...defaultInputProps.renderProps.field,
-      onChange,
-      value,
-      name
+} & BuildInputProps) => merge(
+  defaultInputProps,
+  {
+    renderProps: {
+      field: {
+        onChange,
+        value,
+        name
+      }
     }
   },
-  inputProps: {
-    ...defaultInputProps.inputProps,
-    type,
-    label,
-    name,
-    value,
-    size: 'small',
-    sx: {
-      marginTop: '1px'
+  {
+    inputProps: {
+      ...defaultInputProps.inputProps,
+      type,
+      label,
+      name,
+      value,
+      size: 'small',
+      sx: {
+        marginTop: '1px'
+      }
     }
-  }
-})
+  },
+  otherProps
+)
 
 const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps): ReactElement => {
   switch (props.inputProps.type) {

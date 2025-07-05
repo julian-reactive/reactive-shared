@@ -84,7 +84,7 @@ const onSuccessMutate: OnSuccessMutateProps = (client, queries) => async ({ stat
 const useCustomQuery: UseCustomQueryProps = (name, endpoint) => (queryParams = {}, options = {}) => {
   const { id = null, params = {} } = queryParams
 
-  if (id !== null) {
+  if (id !== null && id !== '') {
     if (endpoint.includes('{id}')) {
       const newEndpoint = endpoint.replace('{id}', id)
       return useReactQuery({ queryKey: [name, newEndpoint], queryFn: () => api.get(newEndpoint), ...options })
