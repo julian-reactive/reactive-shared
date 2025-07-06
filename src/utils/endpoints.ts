@@ -75,6 +75,18 @@ type UseCustomMutateProps = (endpoint: string) => (id: string | null, options: U
 type OnSuccessMutateProps = (client: QueryClient, queries: string[]) => (args: { status: string }) => void
 // #endregion
 
+export const useInvalidateQueries = (queries: string[][]) => {
+  const client = useQueryClient()
+
+  const invalidate = () => {
+    queries.forEach(query => {
+      client.invalidateQueries({ queryKey: query })
+    })
+  }
+
+  return invalidate
+}
+
 const onSuccessMutate: OnSuccessMutateProps = (client, queries) => async ({ status }) => {
   if (status !== 'success') return
 
