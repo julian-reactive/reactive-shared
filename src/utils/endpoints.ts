@@ -72,7 +72,7 @@ type UseCustomQueryProps = (name: string, endpoint: string) => (queryParams: { i
 
 type UseCustomMutateProps = (endpoint: string) => (id: string | null, options: UseMutateOptionsProps) => any
 
-type OnSuccessMutateProps = (client: QueryClient, queries: string[]) => (args: { status: string }) => void
+type OnSuccessMutateProps = (client: QueryClient, queries: string[][]) => (args: { status: string }) => void
 // #endregion
 
 export const useInvalidateQueries = (queries: string[][]) => {
@@ -89,8 +89,7 @@ export const useInvalidateQueries = (queries: string[][]) => {
 
 const onSuccessMutate: OnSuccessMutateProps = (client, queries) => async ({ status }) => {
   if (status !== 'success') return
-
-  await Promise.all(queries.map(async (query: any) => await client.invalidateQueries({ queryKey: query })))
+  await Promise.all(queries.map(async (query: string[]) => await client.invalidateQueries({ queryKey: query })))
 }
 
 const useCustomQuery: UseCustomQueryProps = (name, endpoint) => (queryParams = {}, options = {}) => {
@@ -111,7 +110,7 @@ const useCustomQuery: UseCustomQueryProps = (name, endpoint) => (queryParams = {
 const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null, options = {}) => {
   const { refetchQueries = [], onSuccess } = options
 
-  const onSuccessMutation = onSuccessMutate(useQueryClient(), [endpoint, ...refetchQueries])
+  const onSuccessMutation = onSuccessMutate(useQueryClient(), [[endpoint], ...refetchQueries])
 
   return useMutation({
     mutationFn: (params) => {
@@ -191,7 +190,7 @@ export const useCreateApi: UseCreateApiProps = (endpoint: string, additionalEndp
 
   const useMutate: UseMutateProps = (id = null, options = {}) => {
     const { refetchQueries = [] } = options
-    const onSuccess = onSuccessMutate(client, [endpoint, ...refetchQueries])
+    const onSuccess = onSuccessMutate(client, [[endpoint], ...refetchQueries])
 
     if (id) {
       return useMutation({
