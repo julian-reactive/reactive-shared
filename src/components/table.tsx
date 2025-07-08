@@ -12,7 +12,7 @@ import Paper from '@mui/material/Paper'
 
 export interface AppTableProps extends TableProps {
   headItems: string[]
-  bodyItems: string[][]
+  bodyItems: any[][]
   size?: 'medium' | 'small'
   className?: string
 }
@@ -57,6 +57,7 @@ const AppTableComponent: React.FC<AppTableProps> = ({
                 component={keyItem === 0 ? 'th' : undefined}
                 scope={keyItem === 0 ? 'row' : undefined}
                 align={keyItem > 0 ? 'right' : 'left'}
+                sx={{whiteSpace: 'pre'}}
               >
                 {item}
               </TableCell>

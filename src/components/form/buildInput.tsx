@@ -2,6 +2,8 @@ import React, { ReactElement } from 'react'
 import {
   ControllerRenderProps, UseFormStateReturn, ControllerFieldState
 } from 'react-hook-form'
+import merge from 'lodash/merge'
+import cloneDeep from 'lodash/cloneDeep'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -33,7 +35,7 @@ export interface InputProps {
   name: string
   label: string | (() => string)
   yupValidation?: any
-  icon?: OverridableComponent<SvgIconTypeMap>
+  icon?: OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & { muiName: string; }
   defaultValue?: any
   sx?: SxProps
   className?: string
@@ -105,6 +107,50 @@ export const defaultInputProps: BuildInputProps = {
     name: '',
     label: ''
   }
+}
+
+export const defaultProps = ({
+  onChange,
+  value,
+  name,
+  label,
+  type,
+  ...otherProps
+}: {
+  onChange: (value: string) => void,
+  value: number,
+  name: string,
+  label: string,
+  type: string
+} & BuildInputProps) => {
+  const props = merge(
+    cloneDeep(defaultInputProps),
+    {
+      renderProps: {
+        field: {
+          onChange,
+          value,
+          name
+        }
+      }
+    },
+    {
+      inputProps: {
+        ...cloneDeep(defaultInputProps.inputProps),
+        type,
+        label,
+        name,
+        value,
+        size: 'small',
+        sx: {
+          marginTop: '1px'
+        }
+      }
+    },
+    otherProps
+  )
+
+  return { ...props } as BuildInputProps
 }
 
 const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps): ReactElement => {

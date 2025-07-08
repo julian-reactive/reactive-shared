@@ -27,6 +27,7 @@ import { sxCloseDialogButton } from './sx'
 
 // Interface
 import { SelectedItemProps, DialogOptionsProps, DialogOptionProps } from './index'
+import { SxProps } from '@mui/system'
 
 // #region
 interface DefaultDialogProps {
@@ -35,6 +36,7 @@ interface DefaultDialogProps {
   options: DialogOptionsProps
   selectedItem: SelectedItemProps
   dialogFullScreen: boolean
+  dialogProps?: { sx?: SxProps }
 }
 
 // type ActionToConfirmProps = ((selectedItem: any) => void) | undefined
@@ -43,7 +45,7 @@ type HandleClickProps = (options: DialogOptionProps, key: string) => () => void
 
 // #endregion
 
-const DefaultDialogComponent: React.FC<DefaultDialogProps> = ({ options, title, onClose, selectedItem, dialogFullScreen }) => {
+const DefaultDialogComponent: React.FC<DefaultDialogProps> = ({ options, title, onClose, selectedItem, dialogFullScreen, dialogProps }) => {
   const navigate = useNavigate()
   const [showRender, setShowRender] = useState('renderOptionList')
   const [selectedOption, setSelectedOption] = useState('')
@@ -164,15 +166,16 @@ const DefaultDialogComponent: React.FC<DefaultDialogProps> = ({ options, title, 
       fullScreen={dialogFullScreen}
       onClose={onClose}
       open
+      sx={{ ...dialogProps?.sx, '@media print': { overflow: 'hidden' } }}
     >
-      <DialogTitle id='default-dialog-title'>
+      <DialogTitle id='default-dialog-title' sx={{ '@media print': { display: 'none' } }}>
         {renderDialogTitle}
         <IconButton sx={sxCloseDialogButton} aria-label='close' onClick={onClose}>
           <CloseIcon fontSize='small' />
         </IconButton>
       </DialogTitle>
 
-      <DialogContent dividers>
+      <DialogContent dividers sx={{ '@media print': { overflow: 'hidden' } }}>
         {renderContent}
       </DialogContent>
     </Dialog>

@@ -1,6 +1,6 @@
 {
   "name": "reactive-shared",
-  "version": "1.0.22",
+  "version": "1.0.24",
   "description": "set of libraries for build apps based on lists and forms",
   "repository": {
     "type": "git",
@@ -43,14 +43,17 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^2.9.1",
+    "@tanstack/react-query": "^5.80.7",
+    "@tanstack/react-query-devtools": "^5.80.7",
     "axios": "0.27.2",
     "chalk": "^5.1.2",
     "pluralize": "^8.0.0",
     "react-hook-form": "^7.43.9",
-    "react-number-format": "^4.9.3",
-    "react-query": "3.39.1"
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-number-format": "^4.9.3"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.78.0",
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.0",
     "@types/react": "^18.0.14",

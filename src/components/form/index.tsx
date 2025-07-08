@@ -51,7 +51,8 @@ export interface BuildFormProps {
   inputsFormConfig: InputsFormConfigProps
   responseErrors?: { [key: string]: string }
   onSubmit?: (formData: {[key: string]: any}) => any
-  defaultSuccessMessage?: boolean
+  defaultSuccessMessage?: boolean,
+  formBoxProps?: {[key: string]: any}
 }
 
 // #endregion
@@ -65,7 +66,8 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   confirmButtonLangkey = '',
   inputsFormConfig,
   responseErrors,
-  onSubmit
+  onSubmit,
+  formBoxProps = {}
 }) => {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -109,7 +111,7 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
     evt.preventDefault()
     evt.stopPropagation()
     return handleSubmit(onSubmit!)(evt)
-  }, [])
+  }, [handleSubmit, onSubmit])
 
   const buildForm = useMemo(() => {
     return map(inputsFormConfig, ({
@@ -206,14 +208,14 @@ const CreateFormContainer: React.FC<BuildFormProps> = ({
   useEffect(() => {
     if (!isEmpty(responseErrors)) {
       each(responseErrors, (error, name) => {
-        setError(name, { type: 'error', message: onlyText(`SERVER.VALIDATION.ERROR.${error[0]}`) })
+        setError(name, { type: 'error', message: onlyText(`SERVER.VALIDATION.ERROR.${error}`) })
       })
     }
   }, [responseErrors, setError])
 
   return (
     <form autoComplete='off' data-testid='form' onSubmit={handleOnSubmit}>
-      <Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }} {...formBoxProps}>
         {buildForm}
       </Box>
 

@@ -10,7 +10,7 @@ import isEmpty from 'lodash/isEmpty'
 import Typography, { TypographyProps } from '@mui/material/Typography'
 
 interface iReplace {
-  [key: string]: string
+  [key: string]: string | number
 }
 
 interface LangTranslationsProps {
@@ -74,14 +74,14 @@ export const onlyText: OnlyTextProps = (langKey, replace = undefined, noCache = 
     return replacedCached[langKey]
   }
 
-  each(replace, (value: string, key: string) => {
+  each(replace, (value: string | number, key: string) => {
     const regex = replaceRegex(key.toString())
 
     if (!regex.test(text)) {
       throw new Error(`Intl Error ->> key -- ${key} -- not defined translation in ---> ${langKey}`)
     }
 
-    text = text.replace(replaceRegex(key), value)
+    text = text.replace(replaceRegex(key), value.toString())
   }
   )
 

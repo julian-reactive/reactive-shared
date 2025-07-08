@@ -11,14 +11,17 @@ import React, {
 } from 'react'
 
 import { Link } from 'react-router-dom'
-// import {UseQueryOptions} from "react-query";
+
 import map from 'lodash/map'
+import debounce from 'lodash/debounce'
+import merge from 'lodash/merge'
 
 // Material Components
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import List from '@mui/material/List'
+import Textfield from '@mui/material/TextField'
 
 // Icons
 import AddIcon from '@mui/icons-material/Add'
@@ -30,6 +33,8 @@ import { useAppContext } from '../appContext'
 
 // Components
 import DefaultDialog from './defaultDialog'
+import IScroll from './infiniteScroll'
+import { SxProps } from '@mui/system'
 
 // Interfaces
 /**
@@ -65,7 +70,7 @@ import DefaultDialog from './defaultDialog'
  * ```
  */
 
- export interface SelectedItemProps {
+export interface SelectedItemProps {
   id: string | number
   name: string
 
@@ -99,6 +104,10 @@ interface TabsProps {
   filterTabs: Array<(data: any) => SelectedItemProps[]>
 }
 
+interface SearchProps {
+  key: string
+}
+
 type ItemComponentProps =
   NamedExoticComponent<any>
   | ((props: { item: SelectedItemProps, onSelect: () => void, [key: string]: any, onClose: () => void }) => ReactElement)
@@ -112,7 +121,7 @@ export interface BuildPageListProps {
       [key: string]: string | number | boolean
     }
   },
-  useQueryOptions?: {[key: string]: any}
+  useQueryOptions?: { [key: string]: any }
   /** URL for ADD page */
   addRoute?: string
   /** translation string */
@@ -120,13 +129,17 @@ export interface BuildPageListProps {
   /** translation string */
   pageTitle: string
   dialogOptions?: DialogOptionsProps
+  dialogProps?: SxProps
   dialogFullScreen?: boolean
   DialogComponent?: (props: { onClose: () => void, selectedItem: SelectedItemProps, title: string, dialogFullScreen: boolean }) => ReactElement
   loading?: boolean
   ItemComponent: ItemComponentProps
   itemComponentProps?: any
   tabs?: TabsProps
-  SearchComponent?: any
+  SearchComponent?: any,
+  MiddleComponent?: any,
+  search?: boolean,
+  infiniteScroll?: boolean
 }
 
 /** Component for Create Lists with commons functionalities */
@@ -138,25 +151,35 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   pageTitle,
   addText,
   dialogOptions,
+  dialogProps = {},
   dialogFullScreen = false,
   DialogComponent,
   loading,
   ItemComponent,
   itemComponentProps,
   tabs,
-  SearchComponent
+  MiddleComponent,
+  SearchComponent,
+  search = false,
+  infiniteScroll = false
 }) => {
   const { setPageTitle, setSnackBarMessage } = useAppContext()
 
-  const [searchParams, setSearchParams] = useState()
+  const [searchParams, setSearchParams] = useState<SearchProps>()
 
   const [selectedItem, setSelectedItem] = useState<SelectedItemProps | undefined>(undefined)
 
-  const queryParams = useMemo(() => {
-    if (!searchParams) return useQueryParams
+  const [page, setPage] = useState<number>(1)
 
-    return { params: searchParams }
-  }, [useQueryParams, searchParams])
+  const queryParams = useMemo(() => {
+    const params = merge({}, useQueryParams?.params, searchParams)
+
+    if (infiniteScroll) {
+      params.page = page
+    }
+
+    return { params }
+  }, [useQueryParams, searchParams, page, infiniteScroll])
 
   const { loading: isLoading, data: queryData, error } = useQuery(queryParams, useQueryOptions)
 
@@ -167,6 +190,8 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
   }, [dialogOptions, DialogComponent])
 
   const handleOnClose = useCallback(() => setSelectedItem(undefined), [])
+
+  const debouncedSearch = useMemo(() => debounce(setSearchParams, 500), [])
 
   const renderButton = useMemo(() => {
     if (addRoute === undefined) return null
@@ -203,6 +228,7 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
     if (dialogOptions !== undefined) {
       return (
         <DefaultDialog
+          dialogProps={dialogProps}
           dialogFullScreen={dialogFullScreen}
           onClose={handleOnClose}
           options={dialogOptions}
@@ -211,18 +237,16 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
         />
       )
     }
-  },
-  [
+  }, [
     selectedItem,
     dialogOptions,
     dialogFullScreen,
     handleOnClose,
     DialogComponent
-  ]
-  )
+  ])
 
   const renderList = useMemo(() => {
-    if (queryData === undefined) return null
+    if (queryData === undefined) return []
 
     const { data } = queryData
 
@@ -251,39 +275,38 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
       )
     }
 
-    return (
-      <List>
-        {map(data, (item, idx) => (
-          <ItemComponent
-            {...itemComponentProps}
-            key={idx}
-            item={item}
-            onSelect={handleSelectItem}
-          />
-        ))}
-      </List>
-    )
+    return map(data, (item, idx) => (
+      <ItemComponent
+        {...itemComponentProps}
+        key={idx}
+        item={item}
+        onSelect={handleSelectItem}
+      />
+    ))
   },
-  [
-    queryData,
-    ItemComponent,
-    itemComponentProps,
-    handleSelectItem,
-    tabs
-  ]
+    [
+      queryData,
+      ItemComponent,
+      itemComponentProps,
+      handleSelectItem,
+      tabs,
+      page
+    ]
   )
 
-  const renderLoading = useMemo(() => {
-    if (loading === true || isLoading === true) return <Loading backdrop />
-  }, [loading, isLoading])
-
   const renderSearch = useMemo(() => {
-    if (SearchComponent === undefined) return null
+    if (SearchComponent !== undefined) return <SearchComponent onSearch={setSearchParams} />
 
-    return (
-      <SearchComponent onSearch={setSearchParams} />
-    )
-  }, [SearchComponent])
+    if (search) {
+      return (
+        <Textfield
+          fullWidth
+          placeholder={onlyText('GENERAL.SEARCH')}
+          onChange={(input) => debouncedSearch({ key: input.target.value })}
+        />
+      )
+    }
+  }, [SearchComponent, search])
 
   useEffect(() => {
     setPageTitle(onlyText(pageTitle))
@@ -295,15 +318,28 @@ const BuildPageListComponent: React.FC<BuildPageListProps> = ({
     }
   }, [error, setSnackBarMessage])
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
+
   return (
     <Paper>
       {renderDialog}
       {renderButton}
       <Box>
         {renderSearch}
-        {renderList}
+        {MiddleComponent && <MiddleComponent />}
+        {!!tabs && renderList}
+        {infiniteScroll && !tabs && (
+          <IScroll page={page} onNext={() => setPage((prev) => prev + 1)} items={renderList} />
+        )}
+        {!infiniteScroll && !tabs && (
+          <List>
+            {renderList}
+          </List>
+        )}
       </Box>
-      {renderLoading}
+      {(loading === true || isLoading === true) && <Loading backdrop />}
     </Paper>
   )
 }

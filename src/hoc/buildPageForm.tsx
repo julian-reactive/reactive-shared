@@ -29,6 +29,7 @@ export type UseMutateActionProps = (id: number | string, useMutateOptions: UseMu
 export type BeforeMutateActionProps = (formData: { [key: string]: any }, mutate: UseMutateFunction<unknown, unknown, unknown>) => void
 export type UseQueryActionProps = (params: { id: number | string, params: AnyParams | undefined }, options: UseQueryOptions & { idRequired: boolean }) => UseQueryResult
 export type AfterMutateActionProps = (id: number | string | null, mutateData: any, error: any) => void
+export type AfterQueryActionProps = (formData: AnyParams, data: AnyParams) => void
 
 export interface ActionsProps {
   /**
@@ -44,7 +45,7 @@ export interface ActionsProps {
   useQuery?: UseQueryActionProps
   useQueryParams?: AnyParams
   useQueryOptions?: UseQueryOptions
-  afterQuery?: (formData: AnyParams, data: AnyParams) => void
+  afterQuery?: AfterQueryActionProps
 }
 
 export interface BuildPageFormProps {
@@ -67,7 +68,8 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
     noBackButton = false,
     disabled = false,
     confirmButtonLangkey,
-    inputsFormConfig
+    inputsFormConfig,
+    formBoxProps = {}
   },
   actions: {
     beforeMutate,
@@ -87,25 +89,24 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
   const afterQueryCalled = useRef(false)
   const dataSet = useRef(false)
 
-  const { mutate, isSuccess, error, isLoading: adding, data: mutateData }: any = useMutate(newId, useMutateOptions)
+  const { mutate, isSuccess, error, isPending: adding, data: mutateData }: any = useMutate(newId, useMutateOptions)
 
-  const { isLoading = false, data: queryData = {} }: any = useQuery({ id, params: useQueryParams }, {
-    enabled: Boolean(id),
-    idRequired: true,
-    ...useQueryOptions
-  })
-
-  const handleSubmit = useCallback((formData: {[k: string]: any}, evt: React.SyntheticEvent) => {
-    if (id !== '') {
-      formData.id = id
+  const options = useMemo(() => {
+    return {
+      enabled: Boolean(id),
+      idRequired: true,
+      ...useQueryOptions
     }
+  }, [id, useQueryOptions])
+  const { isLoading = false, data: queryData = {} }: any = useQuery({ id, params: useQueryParams }, options)
 
+  const handleSubmit = useCallback((formData: {[k: string]: any}) => {
     if (beforeMutate != null) {
       beforeMutate(formData, mutate)
     } else {
       mutate(formData)
     }
-  }, [beforeMutate, mutate, id])
+  }, [beforeMutate, mutate])
 
   const errors = useMemo(() => {
     if (mutateData?.status === 'error') {
@@ -176,7 +177,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
   [isSuccess, error, mutateData, id, afterMutate, setSnackBarMessage, defaultSuccessMessage]
   )
 
-  if (id !== '' && (isLoading === true || isEmpty(queryData))) {
+  if (options.enabled && id !== '' && (isLoading === true || isEmpty(queryData))) {
     return <Loading backdrop />
   }
 
@@ -192,6 +193,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
           inputsFormConfig={formData}
           responseErrors={errors}
           onSubmit={handleSubmit}
+          formBoxProps={formBoxProps}
         />
       </Box>
     </Paper>

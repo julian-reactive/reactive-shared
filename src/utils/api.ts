@@ -13,6 +13,7 @@ export const initApi = (config: AxiosRequestConfig): void => {
 
   api.interceptors.request.use(config => {
     set(config, 'headers.Authorization', `Bearer ${token}`)
+    set(config, 'headers.ngrok-skip-browser-warning', 'true')
     return config
   })
 
@@ -22,11 +23,13 @@ export const initApi = (config: AxiosRequestConfig): void => {
       if (error.message === 'Network Error' || error?.response?.status === 500) {
         throw new Error('general-error')
       }
-      if (error?.response?.status === 404) {
-        throw new Error('not-found')
-      }
+
       if (error?.response?.status === 401) {
         throw new Error('forbidden')
+      }
+
+      if (error?.response?.status === 400) {
+        return error?.response?.data
       }
     }
   )
