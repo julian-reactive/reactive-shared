@@ -154,6 +154,10 @@ export const defaultProps = ({
 }
 
 const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps): ReactElement => {
+  // React DevTools will automatically show this component's props and state
+  // You can also add a displayName for easier identification
+  BuildInputComponent.displayName = `BuildInput-${props.inputProps.type}`
+
   switch (props.inputProps.type) {
     case 'checkbox':
       return (<Checkbox {...props} />)

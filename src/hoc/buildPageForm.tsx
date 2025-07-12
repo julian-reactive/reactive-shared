@@ -100,7 +100,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
   }, [id, useQueryOptions])
   const { isLoading = false, data: queryData = {} }: any = useQuery({ id, params: useQueryParams }, options)
 
-  const handleSubmit = useCallback((formData: {[k: string]: any}) => {
+  const handleSubmit = useCallback((formData: { [k: string]: any }) => {
     if (beforeMutate != null) {
       beforeMutate(formData, mutate)
     } else {
@@ -174,7 +174,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
       setSnackBarMessage({ message: onlyText('GENERAL.ERROR'), severity: 'error' })
     }
   },
-  [isSuccess, error, mutateData, id, afterMutate, setSnackBarMessage, defaultSuccessMessage]
+    [isSuccess, error, mutateData, id, afterMutate, setSnackBarMessage, defaultSuccessMessage]
   )
 
   if (options.enabled && id !== '' && (isLoading === true || isEmpty(queryData))) {

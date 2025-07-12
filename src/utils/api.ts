@@ -7,13 +7,15 @@ const token = getLocalStorageValue('token')
 
 export let api: AxiosInstance
 
+export let baseUrl: string
+
 /** Axios configuration for make request to api via `react-query` */
 export const initApi = (config: AxiosRequestConfig): void => {
   api = axios.create(config)
+  baseUrl = config.baseURL || ''
 
   api.interceptors.request.use(config => {
     set(config, 'headers.Authorization', `Bearer ${token}`)
-    set(config, 'headers.ngrok-skip-browser-warning', 'true')
     return config
   })
 
