@@ -166,7 +166,7 @@ const DefaultDialogComponent: React.FC<DefaultDialogProps> = ({ options, title, 
       fullScreen={dialogFullScreen}
       onClose={onClose}
       open
-      sx={{ ...dialogProps?.sx, '@media print': { overflow: 'hidden' } }}
+      sx={{ ...dialogProps?.sx }}
     >
       <DialogTitle id='default-dialog-title' sx={{ '@media print': { display: 'none' } }}>
         {renderDialogTitle}

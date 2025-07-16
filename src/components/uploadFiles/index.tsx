@@ -1,5 +1,3 @@
-import 'react-image-crop/dist/ReactCrop.css'
-
 import React, { useCallback, useRef, useMemo, useEffect } from 'react'
 
 import Box from '@mui/material/Box'

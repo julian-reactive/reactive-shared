@@ -25,16 +25,18 @@ export interface ParamsProps {
   [key: string]: any
 }
 
-export type HookResultProps = UseMutationResult<AxiosResponse, unknown, ParamsProps | undefined> |
-  UseMutationResult<AxiosResponse, unknown, ParamsProps> |
-  UseQueryResult<AxiosResponse> | (() => void)
+export type HookResultProps<TError, TData = any> =
+  | UseMutationResult<AxiosResponse<TData>, TError, ParamsProps | undefined>
+  | UseMutationResult<AxiosResponse<TData>, TError, ParamsProps>
+  | UseQueryResult<AxiosResponse<TData>, TError>
+  | (() => void)
 
 interface ObjectStringProps {
   [key: string]: any
 }
 
 export interface HooksProps {
-  [key: string]: any
+  [key: `use${string}`]: any // Keep this flexible for dynamic properties
 }
 
 export interface AdditionalEndpointsProps {
@@ -44,7 +46,8 @@ export interface AdditionalEndpointsProps {
 }
 
 interface UseMutateOptionsProps {
-  refetchQueries?: string[]
+  refetchQueries?: string[][]
+  onSuccess?: () => void
 }
 
 interface QueryParamsProps {
@@ -229,30 +232,30 @@ export const useCreateApi: UseCreateApiProps = (endpoint: string, additionalEndp
    * @param {*} options :options of react-query useQuery
    * @returns
    */
-  const useQuery: UseQueryProps = (
+  const useQuery = <TData = any, TError = any>(
     { id = undefined, params = {} } = {},
     { idRequired = false, paramsRequired = false, ...options } = {}
-  ) => {
+  ): UseQueryResult<AxiosResponse<TData>, TError> | (() => void) => {
     if ((idRequired && id === undefined) || (paramsRequired && isEmpty(params))) {
       return () => { }
     }
 
     if (id !== undefined) {
-      return useReactQuery({
+      return useReactQuery<AxiosResponse<TData>, TError>({
         queryKey: [endpoint, id],
         queryFn: () => api.get(`${endpoint}/${id}`, { params }),
         ...options
       })
     }
 
-    return useReactQuery({
+    return useReactQuery<AxiosResponse<TData>, TError>({
       queryKey: [endpoint, params],
       queryFn: () => api.get(endpoint, { params }),
       ...options
     })
   }
 
-  const hooks: HooksProps = {
+  const hooks = {
     [`use${entity}Delete`]: useDelete,
     [`use${entity}Mutate`]: useMutate,
     [`use${entity}Query`]: useQuery

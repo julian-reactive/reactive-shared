@@ -47,9 +47,9 @@ const SharedRadio: React.FC<BuildInputProps> = ({
     if (items == null) return null
 
     return items.map(({ value, label }) => {
-      const renderLabel = typeof label === 'function' ? label() : label
+      const renderLabel = typeof label === 'function' ? label() : onlyText(label)
       return (
-        <FormControlLabel key={renderLabel} value={value} control={<Radio />} label={onlyText(renderLabel)} />
+        <FormControlLabel key={renderLabel} value={value} control={<Radio />} label={renderLabel} />
       )
     })
   }, [items])

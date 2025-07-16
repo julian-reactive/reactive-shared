@@ -63,7 +63,7 @@ export interface InputProps {
 
 export interface RenderProps {
   field: ControllerRenderProps<{ [p: string]: any }, string>
-  fieldState: ControllerFieldState & { error: any }
+  fieldState: ControllerFieldState & { error?: any }
   formState: UseFormStateReturn<{ [p: string]: any }>
 }
 
