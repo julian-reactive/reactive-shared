@@ -31,7 +31,8 @@ export const initApi = (config: AxiosRequestConfig): void => {
       }
 
       if (error?.response?.status === 400) {
-        return error?.response?.data
+        throw new Error(error?.response?.data ? error.response.data : 'bad-request')
+        // return error?.response?.data
       }
     }
   )

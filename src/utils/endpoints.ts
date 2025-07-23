@@ -82,9 +82,14 @@ export const useInvalidateQueries = (queries: string[][]) => {
   const client = useQueryClient()
 
   const invalidate = () => {
-    queries.forEach(query => {
-      client.invalidateQueries({ queryKey: query })
-    })
+    try {
+      queries.forEach(query => {
+        client.invalidateQueries({ queryKey: query })
+      })
+    } catch (error) {
+      console.error('Error invalidating queries:', error)
+      
+    }
   }
 
   return invalidate
@@ -114,7 +119,6 @@ const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null
   const { refetchQueries = [], onSuccess } = options
 
   const onSuccessMutation = onSuccessMutate(useQueryClient(), [[endpoint], ...refetchQueries])
-
   return useMutation({
     mutationFn: (params) => {
       if (id) {
@@ -129,6 +133,7 @@ const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null
       return api.post(endpoint, params)
     },
     onSuccess: () => {
+      console.log("success mutation" );
       onSuccessMutation({ status: 'success' })
       if (onSuccess) {
         onSuccess()

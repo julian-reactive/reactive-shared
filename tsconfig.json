@@ -7,22 +7,21 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "jsx": "react",
-    "lib": [ "es2015", "dom" ],
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": false,
     "outDir": "lib",
     "resolveJsonModule": true,
-    "sourceMap": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ESNext"
+    "target": "ES2020",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
-  "include": ["src/**/*"],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

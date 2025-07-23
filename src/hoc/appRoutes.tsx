@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { HashRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 // Material Components
 import Box from '@mui/material/Box'
@@ -25,7 +25,10 @@ const logged = Boolean(getLocalStorageValue('token'))
 
 const AppRoutesContainer: React.FC<AppRoutesProps> = ({ logo, MainAppProvider, UserEntity, routes, mainAppHook }) => {
   return (
-    <Router>
+    <Router future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}>
       <MainAppProvider>
         {Boolean(logged) && <AppBar mainAppHook={mainAppHook} logo={logo} />}
         <Box sx={{ mt: logged ? 8 : 0 }}>

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import ListSubheader from '@mui/material/ListSubheader'
@@ -47,12 +47,12 @@ const Menu: React.FC<MenuProps> = ({ isMenuOpen, onCloseMenu, menuItems }) => {
     const items = menuItems.map(({ name, icon: Icon, path, divider = false, disabled = false }) => {
       return (
         <Fragment key={`menu-list-item-to-${path}`}>
-          <ListItem button component={Link} onClick={onCloseMenu} to={path} disabled={disabled}>
+          <ListItemButton component={Link} onClick={onCloseMenu} to={path} disabled={disabled}>
             <ListItemIcon>
               <Icon />
             </ListItemIcon>
             <ListItemText primary={onlyText(name)} />
-          </ListItem>
+          </ListItemButton>
 
           {divider && <Divider />}
         </Fragment>

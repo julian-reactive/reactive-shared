@@ -36,7 +36,7 @@ interface DefaultDialogProps {
   options: DialogOptionsProps
   selectedItem: SelectedItemProps
   dialogFullScreen: boolean
-  dialogProps?: { sx?: SxProps }
+  dialogProps?: { sx?: SxProps } 
 }
 
 // type ActionToConfirmProps = ((selectedItem: any) => void) | undefined
@@ -50,6 +50,8 @@ const DefaultDialogComponent: React.FC<DefaultDialogProps> = ({ options, title, 
   const [showRender, setShowRender] = useState('renderOptionList')
   const [selectedOption, setSelectedOption] = useState('')
   const actionToConfirm = useRef<any>()
+  
+  const fullScreen = dialogFullScreen || options?.[selectedOption]?.fullScreen || false
 
   const handleClick = useCallback<HandleClickProps>(({ to, onConfirm, Component }, key) => () => {
     setSelectedOption(key)
@@ -163,7 +165,7 @@ const DefaultDialogComponent: React.FC<DefaultDialogProps> = ({ options, title, 
     <Dialog
       aria-labelledby='product-dialog'
       fullWidth
-      fullScreen={dialogFullScreen}
+      fullScreen={fullScreen}
       onClose={onClose}
       open
       sx={{ ...dialogProps?.sx }}

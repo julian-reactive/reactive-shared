@@ -37,7 +37,7 @@ const SharedAccordionComponent: React.FC<SharedAccordionProps> = props => {
             expandIcon={<ExpandMoreIcon />}
             id={`panel${itemIdx}a-header`}
           >
-            <Box sx={{ textTransform: 'capitalize' }}>
+            <Box sx={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
               {name}
             </Box>
           </AccordionSummary>

@@ -87,6 +87,7 @@ export interface DialogOptionProps {
   disabled?: boolean | ((selectedItem: SelectedItemProps) => boolean)
   shouldRender?: (selectedItem: SelectedItemProps) => boolean
   dialogTitle?: string | ((selectedItem: SelectedItemProps) => string)
+  fullScreen?: boolean
 }
 
 export interface DialogOptionsProps {

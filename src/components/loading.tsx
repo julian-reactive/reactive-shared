@@ -14,7 +14,7 @@ export interface iLoading {
   backdrop?: boolean
 }
 
-const LoadingComponent: React.FC<iLoading> = ({ backdrop = false }) => {
+const LoadingComponent = ({ backdrop = false }: iLoading) => {
   if (backdrop) {
     return (
       <Backdrop sx={sxLoadingBackdrop} open>

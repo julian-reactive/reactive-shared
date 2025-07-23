@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import NumberFormat, { NumberFormatProps } from 'react-number-format'
+import  { NumericFormat, NumericFormatProps } from 'react-number-format'
 
 import { SxProps, Theme } from '@mui/material/styles'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
@@ -16,25 +16,28 @@ export interface BasicNumberFormatProps {
   sx?: SxProps<Theme>
 }
 
-const BasicNumberFormatCustom = React.forwardRef<NumberFormatProps, TextFieldProps>(({ onChange, ...props }, ref) => {
-  return (
-    <NumberFormat
-      {...props}
-      getInputRef={ref}
-      onValueChange={({ value }) => {
-        onChange({
-          target: {
-            name: props.name!,
-            value
+const BasicNumberFormatCustom = React.forwardRef<HTMLInputElement, NumericFormatProps & { name?: string; onChange?: (event: any) => void }>(
+  ({ onChange, name, ...props }, ref) => {
+    return (
+      <NumericFormat
+        {...props}
+        getInputRef={ref}
+        onValueChange={({ value }) => {
+          if (onChange) {
+            onChange({
+              target: {
+                name: name!,
+                value
+              }
+            })
           }
-        })
-      }}
-      thousandSeparator='.'
-      decimalSeparator=','
-      isNumericString
-    />
-  )
-})
+        }}
+        thousandSeparator='.'
+        decimalSeparator=','
+      />
+    )
+  }
+)
 BasicNumberFormatCustom.displayName = 'BasicNumberFormatCustom'
 
 const BasicNumberFormat: React.FC<BasicNumberFormatProps> = ({ name, label, value, onChange, sx }) => {
