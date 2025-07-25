@@ -4,25 +4,31 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
     "declaration": true,
+    "declarationDir": "dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "jsx": "react",
-    "lib": [ "es2015", "dom" ],
-    "module": "commonjs",
+    "jsx": "react-jsx",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
     "moduleResolution": "node",
-    "noEmit": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": false,
-    "outDir": "lib",
+    "outDir": "dist",
     "resolveJsonModule": true,
     "sourceMap": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ESNext"
+    "target": "ES2020",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ]
 }
