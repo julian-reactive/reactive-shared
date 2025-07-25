@@ -23,7 +23,7 @@ module.exports = (env, argv) => {
       globalObject: 'this'
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      extensions: ['.tsx', '.ts', '.js', '.jsx'],
       alias: {
         '@': path.resolve(__dirname, 'src')
       },
@@ -33,41 +33,62 @@ module.exports = (env, argv) => {
         "stream": require.resolve("stream-browserify"),
         "url": require.resolve("url"),
         "process": require.resolve("process/browser"),
-              "stream-http": require.resolve("stream-http")
+        "stream-http": require.resolve("stream-http")
+      },
+      fullySpecified: false
+    },
+    externals: [
+      // Function to externalize all MUI and other peer dependencies
+      function({ context, request }, callback) {
+        // Externalize all @mui packages and their subpaths
+        if (/^@mui\//.test(request)) {
+          return callback(null, 'umd ' + request)
+        }
+        
+        // Externalize emotion packages
+        if (/^@emotion\//.test(request)) {
+          return callback(null, 'umd ' + request)
+        }
+        
+        // Externalize react packages
+        if (/^react($|\/)|^react-dom($|\/)/.test(request)) {
+          return callback(null, 'umd ' + request)
+        }
+        
+        // Continue with other externals
+        callback()
+      },
+      {
+        // Core React
+        react: {
+          commonjs: 'react',
+          commonjs2: 'react',
+          amd: 'react',
+          root: 'React'
+        },
+        'react-dom': {
+          commonjs: 'react-dom',
+          commonjs2: 'react-dom',
+          amd: 'react-dom',
+          root: 'ReactDOM'
+        },
+        
+        // Other libraries
+        yup: 'yup',
+        lodash: 'lodash',
+        '@fontsource/roboto': '@fontsource/roboto',
+        'react-router-dom': 'react-router-dom',
+        '@tanstack/react-query': '@tanstack/react-query',
+        '@tanstack/react-query-devtools': '@tanstack/react-query-devtools',
+        'react-hook-form': 'react-hook-form',
+        '@hookform/resolvers': '@hookform/resolvers',
+        'date-fns': 'date-fns',
+        moment: 'moment',
+        'moment-timezone': 'moment-timezone',
+        'react-number-format': 'react-number-format',
+        'react-infinite-scroll-component': 'react-infinite-scroll-component'
       }
-    },
-    externals: {
-      react: {
-        commonjs: 'react',
-        commonjs2: 'react',
-        amd: 'React',
-        root: 'React'
-      },
-      'react-dom': {
-        commonjs: 'react-dom',
-        commonjs2: 'react-dom',
-        amd: 'ReactDOM',
-        root: 'ReactDOM'
-      },
-      yup: 'yup',
-      lodash: 'lodash',
-      '@mui/material': '@mui/material',
-      '@mui/icons-material': '@mui/icons-material',
-      '@mui/system': '@mui/system',
-      '@mui/x-date-pickers': '@mui/x-date-pickers',
-      '@emotion/react': '@emotion/react',
-      '@emotion/styled': '@emotion/styled',
-      '@fontsource/roboto': '@fontsource/roboto',
-      'react-router-dom': 'react-router-dom',
-      '@tanstack/react-query': '@tanstack/react-query',
-      'react-hook-form': 'react-hook-form',
-      '@hookform/resolvers': '@hookform/resolvers',
-      'date-fns': 'date-fns',
-      moment: 'moment',
-      'moment-timezone': 'moment-timezone',
-      'react-number-format': 'react-number-format',
-      'react-infinite-scroll-component': 'react-infinite-scroll-component'
-    },
+    ],
     plugins: [
       new CleanWebpackPlugin(),
       new webpack.ProgressPlugin(),
@@ -87,12 +108,26 @@ module.exports = (env, argv) => {
           exclude: /node_modules/,
           use: [
             {
-              loader: 'babel-loader'
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  ['@babel/preset-env', { 
+                    targets: { 
+                      browsers: ['last 2 versions', 'not dead', 'not ie <= 11']
+                    }
+                  }],
+                  ['@babel/preset-react', { runtime: 'automatic' }],
+                  '@babel/preset-typescript'
+                ]
+              }
             },
             {
               loader: 'ts-loader',
               options: {
-                transpileOnly: true
+                transpileOnly: true,
+                compilerOptions: {
+                  noEmit: false
+                }
               }
             }
           ]
@@ -101,7 +136,17 @@ module.exports = (env, argv) => {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           use: {
-            loader: 'babel-loader'
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['@babel/preset-env', { 
+                  targets: { 
+                    browsers: ['last 2 versions', 'not dead', 'not ie <= 11']
+                  }
+                }],
+                ['@babel/preset-react', { runtime: 'automatic' }]
+              ]
+            }
           }
         },
         {
@@ -116,16 +161,7 @@ module.exports = (env, argv) => {
     },
     optimization: {
       minimize: isProduction,
-      splitChunks: isProduction ? {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all'
-          }
-        }
-      } : false
+      splitChunks: false
     },
     devtool: isDevelopment ? 'eval-source-map' : 'source-map',
     devServer: {
@@ -139,7 +175,9 @@ module.exports = (env, argv) => {
       historyApiFallback: true
     },
     performance: {
-      hints: isProduction ? 'warning' : false
+      hints: isProduction ? 'warning' : false,
+      maxAssetSize: 500000,
+      maxEntrypointSize: 500000
     }
   }
 }
