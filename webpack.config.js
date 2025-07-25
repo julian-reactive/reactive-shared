@@ -16,7 +16,7 @@ module.exports = (env, argv) => {
     output: {
       clean: true,
       path: path.resolve(__dirname, 'dist'),
-      filename: isProduction ? '[name].[contenthash].js' : '[name].js',
+      filename: '[name].js',
       libraryTarget: 'umd',
       library: 'reactive-shared',
       umdNamedDefine: true,
