@@ -10,7 +10,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import FormHelperText from '@mui/material/FormHelperText'
 
 // Shared
-import { BuildInputProps } from './buildInput'
+import { BuildInputProps } from './sharedTypes'
 import { onlyText, usePreviousValue, useLabel } from '../../utils'
 
 type SelectProps = BuildInputProps & {

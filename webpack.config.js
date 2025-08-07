@@ -3,6 +3,7 @@ const path = require('path')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const CircularDependencyPlugin = require('circular-dependency-plugin')
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production'
@@ -99,7 +100,13 @@ module.exports = (env, argv) => {
       ...(isDevelopment ? [new HtmlWebpackPlugin({
         template: 'public/index.html'
       })] : []),
-      ...(env && env.analyze ? [new BundleAnalyzerPlugin()] : [])
+      ...(env && env.analyze ? [new BundleAnalyzerPlugin()] : []),
+      new CircularDependencyPlugin({
+        exclude: /node_modules/,
+        failOnError: true,
+        allowAsyncCycles: false,
+        cwd: process.cwd(),
+      })
     ],
     module: {
       rules: [

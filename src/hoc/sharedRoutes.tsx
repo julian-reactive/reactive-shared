@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 
 import { getLocalStorageValue } from '../utils'
 
-import { NotFound } from '../components'
+import { NotFound } from '../components/notFound'
 
 const logged = Boolean(getLocalStorageValue('token'))
 

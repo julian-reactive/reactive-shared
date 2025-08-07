@@ -16,11 +16,13 @@ import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 
 // Context
-import { useAppContext } from './appContext'
+import { useAppContext } from './hooks'
 
 // Shared
-import { CreateForm, BuildFormProps, Loading, InputsFormConfigProps } from '../components'
-import { HookResultProps, onlyText } from '../utils'
+import { CreateForm, BuildFormProps, InputsFormConfigProps  } from '../components/form'
+import {  Loading } from '../components/loading'
+import { HookResultProps } from '../utils/endpoints'
+import {  onlyText } from '../utils/intl'
 
 // #region
 // Interfaces
@@ -98,6 +100,7 @@ const BuildPageFormContainer: React.FC<BuildPageFormProps> = ({
       ...useQueryOptions
     }
   }, [id, useQueryOptions])
+
   const { isLoading = false, data: queryData = {} }: any = useQuery({ id, params: useQueryParams }, options)
 
   const handleSubmit = useCallback((formData: { [k: string]: any }) => {

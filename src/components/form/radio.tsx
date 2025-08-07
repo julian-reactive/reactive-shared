@@ -10,7 +10,7 @@ import FormLabel from '@mui/material/FormLabel'
 import FormHelperText from '@mui/material/FormHelperText'
 
 // Shared
-import { BuildInputProps } from './buildInput'
+import { BuildInputProps } from './sharedTypes'
 import { onlyText, usePreviousValue, useLabel } from '../../utils'
 
 const SharedRadio: React.FC<BuildInputProps> = ({

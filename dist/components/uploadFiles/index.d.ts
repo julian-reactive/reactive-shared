@@ -6,8 +6,9 @@ interface SharedUploadFilesProps {
     maxSize?: number;
     entity: EntityProp;
     entityId?: EntityIdProp;
+    targetId?: string;
     type?: keyof typeof ACCEPTED_FILE_TYPES;
     onLoad: (files: FileProps[]) => void;
 }
-export declare const SharedUploadFiles: ({ multiple, maxSize, entity, entityId, type, onLoad }: SharedUploadFilesProps) => import("react/jsx-runtime").JSX.Element;
+export declare const SharedUploadFiles: ({ multiple, maxSize, entity, entityId, targetId, type, onLoad }: SharedUploadFilesProps) => import("react/jsx-runtime").JSX.Element;
 export {};

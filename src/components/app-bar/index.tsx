@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography'
 import MenuIcon from '@mui/icons-material/Menu'
 
 // Shared
-import { useAppContext } from '../../hoc'
+import { useAppContext } from '../../hoc/hooks'
 import { Link } from '../link'
 
 // Components

@@ -1,6 +1,6 @@
 {
   "name": "reactive-shared",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "set of libraries for build apps based on lists and forms",
   "repository": {
     "type": "git",
@@ -67,6 +67,7 @@
     "@typescript-eslint/parser": "^8.8.1",
     "babel-loader": "^10.0.0",
     "buffer": "^6.0.3",
+    "circular-dependency-plugin": "^5.2.2",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^7.1.2",
     "eslint": "^9.12.0",
@@ -76,6 +77,7 @@
     "eslint-plugin-react-refresh": "^0.4.12",
     "globals": "^15.0.0",
     "html-webpack-plugin": "^5.6.3",
+    "madge": "^8.0.0",
     "process": "^0.11.10",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
@@ -110,6 +112,8 @@
     "analyze": "webpack --mode production --env analyze",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "check-circular": "madge --circular --extensions ts,tsx src/",
+    "check-circular-json": "madge --circular --extensions ts,tsx --json src/"
   }
 }

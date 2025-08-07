@@ -9,7 +9,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 import FormHelperText from '@mui/material/FormHelperText'
 
-import { BuildInputProps } from './buildInput'
+import { BuildInputProps } from './sharedTypes'
 import { usePreviousValue, useLabel, onlyText } from '../../utils'
 
 const SharedCheckbox: React.FC<BuildInputProps> = ({

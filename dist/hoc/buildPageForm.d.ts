@@ -1,7 +1,7 @@
 import React from 'react';
 import { UseMutateFunction, UseMutationOptions, UseQueryOptions, UseQueryResult } from 'react-query';
-import { BuildFormProps } from '../components';
-import { HookResultProps } from '../utils';
+import { BuildFormProps } from '../components/form';
+import { HookResultProps } from '../utils/endpoints';
 interface AnyParams {
     [key: string]: any;
 }

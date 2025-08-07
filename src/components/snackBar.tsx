@@ -6,16 +6,7 @@ import Button from '@mui/material/Button'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 
-// Context
-import { useAppContext } from '../hoc'
-
-// Interfaces
-
-export type TypeSeverity = 'error' | 'info' | 'success' | 'warning'
-export type TypeSnackBar = string | { message: string, severity: TypeSeverity } | undefined
-
-const SnackBarComponent: React.FC = () => {
-  const { snackBarMessage, setSnackBarMessage } = useAppContext()
+const SnackBarComponent = ( { snackBarMessage, setSnackBarMessage }: any) => {
 
   const handleClose = useCallback(
     () => {

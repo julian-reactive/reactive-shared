@@ -1,7 +1,2 @@
 import React from 'react';
-export type TypeSeverity = 'error' | 'info' | 'success' | 'warning';
-export type TypeSnackBar = string | {
-    message: string;
-    severity: TypeSeverity;
-} | undefined;
-export declare const SnackBar: React.NamedExoticComponent<{}>;
+export declare const SnackBar: React.MemoExoticComponent<({ snackBarMessage, setSnackBarMessage }: any) => import("react/jsx-runtime").JSX.Element>;

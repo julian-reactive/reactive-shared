@@ -10,7 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 
 // Shared
 import { useLabel, usePreviousValue } from '../../utils'
-import { BuildInputProps } from './buildInput'
+import { BuildInputProps } from './sharedTypes'
 
 const SharedDatePickerComponent: React.FC<BuildInputProps> = ({
   renderProps: {

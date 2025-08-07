@@ -11,7 +11,7 @@ import CloudIcon from '@mui/icons-material/Cloud'
 import { Intl, onlyText } from '../../utils/intl'
 import { Loading } from '../loading'
 
-import { useAppContext } from '../../hoc/appContext'
+import { useAppContext } from '../../hoc/hooks'
 import { useHandleFiles, EntityProp, EntityIdProp, FileProps } from './hooks'
 
 import FileRow from './fileRow'
@@ -24,6 +24,7 @@ interface SharedUploadFilesProps {
   maxSize?: number,
   entity: EntityProp,
   entityId?: EntityIdProp,
+  targetId?: string,
   type?: keyof typeof ACCEPTED_FILE_TYPES,
   onLoad: (files: FileProps[]) => void,
 }
@@ -33,10 +34,11 @@ export const SharedUploadFiles = ({
   maxSize = 5 * 1024 * 1024,
   entity,
   entityId,
+  targetId = '',
   type = ACCEPTED_FILE_TYPES.IMAGES as keyof typeof ACCEPTED_FILE_TYPES,
   onLoad
 }: SharedUploadFilesProps) => {
-  const idRef = useRef<string>()
+  const idRef = useRef<string>('')
   if (!idRef.current) {
     idRef.current = `upload-${Math.random().toString(36).substr(2, 9)}-${Date.now()}`
   }

@@ -133,7 +133,6 @@ const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null
       return api.post(endpoint, params)
     },
     onSuccess: () => {
-      console.log("success mutation" );
       onSuccessMutation({ status: 'success' })
       if (onSuccess) {
         onSuccess()

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BuildInputProps } from './buildInput';
+import { BuildInputProps } from './sharedTypes';
 type SelectProps = BuildInputProps & {
     inputProps: {
         native?: boolean;

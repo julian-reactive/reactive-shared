@@ -13,7 +13,7 @@ import { usePreviousValue, useLabel, onlyText } from '../../utils'
 // Icons
 import Error from '@mui/icons-material/Error'
 
-import { BuildInputProps } from './buildInput'
+import { BuildInputProps } from './sharedTypes'
 
 // Styles
 import { sxTextField } from './styles'

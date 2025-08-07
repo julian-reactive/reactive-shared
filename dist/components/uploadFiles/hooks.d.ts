@@ -6,9 +6,10 @@ export interface FileProps {
     size: number;
     content_type: string;
 }
-export declare const useHandleFiles: ({ entity, entityId }: {
+export declare const useHandleFiles: ({ entity, entityId, targetId }: {
     entity: EntityProp;
     entityId: EntityIdProp;
+    targetId: string;
 }) => {
     files: FileProps[] | undefined;
     isLoading: boolean;

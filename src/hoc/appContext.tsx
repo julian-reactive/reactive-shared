@@ -1,16 +1,18 @@
-import React, { ReactNode, useState, useContext, ReactElement } from 'react'
+import React, { ReactNode, useState, ReactElement } from 'react'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 // SnackBar
-import { SnackBar, TypeSnackBar } from '../components'
+import { SnackBar } from '../components/snackBar'
+import { TypeSnackBar } from '../components/sharedTypes'
+
 // import { AxiosResponse } from 'axios'
 
 // Types
 // export type TypeStatus = AxiosResponse<{ type:string, [key:string]: any }> | undefined
 export type TypeStatus = any
 
-interface AppContextProps {
+export interface AppContextProps {
   status: TypeStatus
   setStatus: React.Dispatch<React.SetStateAction<TypeStatus>>
   snackBarMessage: TypeSnackBar
@@ -29,7 +31,7 @@ const queryClient = new QueryClient({
   }
 })
 
-const AppContext = React.createContext<AppContextProps | undefined>(undefined)
+export const AppContext = React.createContext<AppContextProps | undefined>(undefined)
 
 const AppProviderComponent: React.FC<{ children?: ReactNode, debugReactQuery?: boolean }> = ({ children, debugReactQuery = false }): ReactElement => {
   const [status, setStatus] = useState<TypeStatus>()
@@ -49,22 +51,12 @@ const AppProviderComponent: React.FC<{ children?: ReactNode, debugReactQuery?: b
     <AppContext.Provider value={value}>
       <QueryClientProvider client={queryClient}>
         {children}
-        <SnackBar />
+        <SnackBar snackBarMessage={snackBarMessage} setSnackBarMessage={setSnackBarMessage} />
         {debugReactQuery && <ReactQueryDevtools />}
 
       </QueryClientProvider>
     </AppContext.Provider>
   )
-}
-
-export const useAppContext = (): AppContextProps => {
-  const context = useContext(AppContext)
-
-  if (context === undefined) {
-    throw new Error('AppContext must be within AppProvider')
-  }
-
-  return context
 }
 
 export const AppProvider = React.memo(AppProviderComponent)

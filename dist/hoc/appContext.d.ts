@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
-import { TypeSnackBar } from '../components';
+import { TypeSnackBar } from '../components/sharedTypes';
 export type TypeStatus = any;
-interface AppContextProps {
+export interface AppContextProps {
     status: TypeStatus;
     setStatus: React.Dispatch<React.SetStateAction<TypeStatus>>;
     snackBarMessage: TypeSnackBar;
@@ -9,9 +9,8 @@ interface AppContextProps {
     pageTitle: string;
     setPageTitle: React.Dispatch<React.SetStateAction<string>>;
 }
-export declare const useAppContext: () => AppContextProps;
+export declare const AppContext: React.Context<AppContextProps | undefined>;
 export declare const AppProvider: React.NamedExoticComponent<{
     children?: ReactNode;
     debugReactQuery?: boolean;
 }>;
-export {};

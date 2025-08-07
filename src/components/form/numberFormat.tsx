@@ -3,7 +3,7 @@ import React from 'react'
 import { NumericFormat, NumericFormatProps } from 'react-number-format'
 
 import TextField from './textField'
-import { BuildInputProps } from './buildInput'
+import { BuildInputProps } from './sharedTypes'
 
 interface CustomProps {
   onChange: (event: { target: { name: string, value: string } }) => void

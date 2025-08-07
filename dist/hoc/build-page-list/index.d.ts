@@ -1,4 +1,5 @@
 import React, { NamedExoticComponent, ReactElement } from 'react';
+import { SelectedItemProps, DialogOptionsProps } from './defaultDialog';
 import { SxProps } from '@mui/system';
 /**
  * Object of options for show in dialog when a item is selected.
@@ -32,28 +33,6 @@ import { SxProps } from '@mui/system';
  * };
  * ```
  */
-export interface SelectedItemProps {
-    id: string | number;
-    name: string;
-    [key: string]: any;
-}
-export interface DialogOptionProps {
-    icon: ReactElement;
-    text: ReactElement;
-    to?: string | ((selectedItem: SelectedItemProps) => void);
-    onConfirm?: (selectedItem: SelectedItemProps) => void;
-    Component?: React.ComponentType<{
-        item: SelectedItemProps;
-        onClose: () => void;
-    }>;
-    disabled?: boolean | ((selectedItem: SelectedItemProps) => boolean);
-    shouldRender?: (selectedItem: SelectedItemProps) => boolean;
-    dialogTitle?: string | ((selectedItem: SelectedItemProps) => string);
-    fullScreen?: boolean;
-}
-export interface DialogOptionsProps {
-    [key: string]: DialogOptionProps;
-}
 /**
  * Used for split content in tabs
  * tabsHeader: label for show in tabhead

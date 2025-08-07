@@ -8,7 +8,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import FormHelperText from '@mui/material/FormHelperText'
 import Switch from '@mui/material/Switch'
 
-import { BuildInputProps } from './buildInput'
+import { BuildInputProps } from './sharedTypes'
 import { usePreviousValue, useLabel, onlyText } from '../../utils'
 
 const SharedSwitch: React.FC<BuildInputProps> = ({

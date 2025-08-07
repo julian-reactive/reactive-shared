@@ -13,7 +13,7 @@ import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 
 // Shared
-import { BuildInputProps } from './buildInput'
+import { BuildInputProps } from './sharedTypes'
 import { onlyText, usePreviousValue, useLabel } from '../../utils'
 
 const getValue = (fieldValue, value) => {

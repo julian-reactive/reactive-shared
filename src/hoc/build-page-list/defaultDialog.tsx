@@ -1,5 +1,5 @@
 // Libraries
-import React, { useCallback, useMemo, useState, useRef } from 'react'
+import React, { ReactElement, useCallback, useMemo, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import map from 'lodash/map'
 // Import isEmpty from 'lodash/isEmpty'
@@ -26,10 +26,33 @@ import { Intl } from '../../utils'
 import { sxCloseDialogButton } from './sx'
 
 // Interface
-import { SelectedItemProps, DialogOptionsProps, DialogOptionProps } from './index'
 import { SxProps } from '@mui/system'
 
 // #region
+export interface SelectedItemProps {
+  id: string | number
+  name: string
+
+  [key: string]: any
+}
+
+export interface DialogOptionProps {
+  icon: ReactElement
+  text: ReactElement
+  to?: string | ((selectedItem: SelectedItemProps) => void)
+  onConfirm?: (selectedItem: SelectedItemProps) => void
+  Component?: React.ComponentType<{ item: SelectedItemProps, onClose: () => void }>
+  // Component?: NamedExoticComponent<ChangeStatusProps>
+  disabled?: boolean | ((selectedItem: SelectedItemProps) => boolean)
+  shouldRender?: (selectedItem: SelectedItemProps) => boolean
+  dialogTitle?: string | ((selectedItem: SelectedItemProps) => string)
+  fullScreen?: boolean
+}
+
+export interface DialogOptionsProps {
+  [key: string]: DialogOptionProps
+}
+
 interface DefaultDialogProps {
   title: string
   onClose: () => void

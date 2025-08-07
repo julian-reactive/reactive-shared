@@ -29,10 +29,10 @@ import AddIcon from '@mui/icons-material/Add'
 // Shared
 import { onlyText } from '../../utils'
 import { Loading, AppTabs } from '../../components'
-import { useAppContext } from '../appContext'
+import { useAppContext } from '../hooks'
 
 // Components
-import DefaultDialog from './defaultDialog'
+import DefaultDialog, { SelectedItemProps, DialogOptionsProps } from './defaultDialog'
 import IScroll from './infiniteScroll'
 import { SxProps } from '@mui/system'
 
@@ -70,29 +70,8 @@ import { SxProps } from '@mui/system'
  * ```
  */
 
-export interface SelectedItemProps {
-  id: string | number
-  name: string
 
-  [key: string]: any
-}
 
-export interface DialogOptionProps {
-  icon: ReactElement
-  text: ReactElement
-  to?: string | ((selectedItem: SelectedItemProps) => void)
-  onConfirm?: (selectedItem: SelectedItemProps) => void
-  Component?: React.ComponentType<{ item: SelectedItemProps, onClose: () => void }>
-  // Component?: NamedExoticComponent<ChangeStatusProps>
-  disabled?: boolean | ((selectedItem: SelectedItemProps) => boolean)
-  shouldRender?: (selectedItem: SelectedItemProps) => boolean
-  dialogTitle?: string | ((selectedItem: SelectedItemProps) => string)
-  fullScreen?: boolean
-}
-
-export interface DialogOptionsProps {
-  [key: string]: DialogOptionProps
-}
 
 /**
  * Used for split content in tabs
