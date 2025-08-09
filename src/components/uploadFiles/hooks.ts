@@ -28,7 +28,9 @@ export const useHandleFiles = ({ entity, entityId, targetId }: { entity: EntityP
     mutationFn: (newFiles: File[]) => {
       const formData = new FormData()
       newFiles.forEach(file => formData.append('files', file))
-      return api.post('/files/upload', formData, {
+
+      return api.post('/files/upload', { 
+        formData,
         params: {
           entity,
           entityId,

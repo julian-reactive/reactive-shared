@@ -6,10 +6,11 @@ import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
 import { SxProps } from '@mui/system'
 
+import { ACCEPTED_FILE_TYPES } from '../uploadFiles/constants'
 import { OnlyTextProps } from '../../utils'
 
 // Interfaces
-type HTMLTypeProps = 'checkbox' | 'radio' | 'select' | 'selectMultiple' | 'text' | 'textarea' | 'password' | 'email' | 'number' | 'switch'
+type HTMLTypeProps = 'file' | 'checkbox' | 'radio' | 'select' | 'selectMultiple' | 'text' | 'textarea' | 'password' | 'email' | 'number' | 'switch'
 type SharedTypeProps = 'numberFormat' | 'divider' | 'datePicker' | 'dateTimePicker' | 'component'
 type TypeProps = HTMLTypeProps | SharedTypeProps
 
@@ -41,7 +42,10 @@ export interface InputProps {
   showInput?: boolean
   native?: boolean
   fullWidth?: boolean
-  [k: string]: unknown
+  [k: string]: unknown,
+  accept?: string,
+  maxSize?: number,
+  fileType?: keyof typeof ACCEPTED_FILE_TYPES,
 }
 
 export interface RenderProps {

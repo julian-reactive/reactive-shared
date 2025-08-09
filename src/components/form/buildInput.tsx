@@ -17,6 +17,7 @@ import DateTimePicker from './datetimePicker'
 import NumberFormat from './numberFormat'
 import Checkbox from './checkbox'
 import Switch from './switch'
+import File from './file'
 
 import { BuildInputProps } from './sharedTypes'
 
@@ -106,6 +107,8 @@ const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps):
   BuildInputComponent.displayName = `BuildInput-${props.inputProps.type}`
 
   switch (props.inputProps.type) {
+    case 'file':
+      return (<File {...props} />)
     case 'checkbox':
       return (<Checkbox {...props} />)
     case 'numberFormat':
@@ -129,7 +132,6 @@ const BuildInputComponent: React.FC<BuildInputProps> = (props: BuildInputProps):
         const Component = props.inputProps.component
         return (<Component {...props} />)
       }
-
       return (<span>______NO_COMPONENT______</span>)
     default:
       return (<TextField {...props} />)

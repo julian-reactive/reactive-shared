@@ -73,7 +73,7 @@ type UseCreateApiProps = (endpoint: string, additionalEndpoints?: AdditionalEndp
 
 type UseCustomQueryProps = (name: string, endpoint: string) => (queryParams: { id?: string, params?: ObjectStringProps }, options: ObjectStringProps) => any
 
-type UseCustomMutateProps = (endpoint: string) => (id: string | null, options: UseMutateOptionsProps) => any
+type UseCustomMutateProps = (endpoint: string) => (id: string | null, options: UseMutateOptionsProps& {params?: ObjectStringProps}, config?: ObjectStringProps) => any
 
 type OnSuccessMutateProps = (client: QueryClient, queries: string[][]) => (args: { status: string }) => void
 // #endregion
@@ -115,22 +115,31 @@ const useCustomQuery: UseCustomQueryProps = (name, endpoint) => (queryParams = {
   return useReactQuery({ queryKey: [name, endpoint], queryFn: () => api.get(endpoint, { params }), ...options })
 }
 
-const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null, options = {}) => {
-  const { refetchQueries = [], onSuccess } = options
+const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null, options = {}, config = {}) => {
+  const { refetchQueries = [], onSuccess, params = {} } = options
 
   const onSuccessMutation = onSuccessMutate(useQueryClient(), [[endpoint], ...refetchQueries])
   return useMutation({
-    mutationFn: (params) => {
+    mutationFn: (formData) => {
+      let data = formData
+      let paramsOptions = {}
+      if (formData.formData) {
+        data = formData.formData
+        delete formData.formData
+        paramsOptions = formData
+      }
+      console.log("formData", formData);
+      
       if (id) {
         if (endpoint.includes('{id}')) {
           const newEndpoint = endpoint.replace('{id}', id)
-          return api.put(newEndpoint, params)
+          return api.put(newEndpoint, data, paramsOptions)
         }
 
-        return api.put(`${endpoint}/${id}`, params)
+        return api.put(`${endpoint}/${id}`, data, paramsOptions)
       }
-
-      return api.post(endpoint, params)
+      console.log("...paramsOptions", paramsOptions);
+      return api.post(endpoint, data, paramsOptions)
     },
     onSuccess: () => {
       onSuccessMutation({ status: 'success' })
