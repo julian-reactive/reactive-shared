@@ -2,8 +2,9 @@ import { ControllerRenderProps, UseFormStateReturn, ControllerFieldState } from 
 import { SvgIconTypeMap } from '@mui/material/SvgIcon';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { SxProps } from '@mui/system';
+import { ACCEPTED_FILE_TYPES } from './file/constants';
 import { OnlyTextProps } from '../../utils';
-type HTMLTypeProps = 'checkbox' | 'radio' | 'select' | 'selectMultiple' | 'text' | 'textarea' | 'password' | 'email' | 'number' | 'switch';
+type HTMLTypeProps = 'file' | 'checkbox' | 'radio' | 'select' | 'selectMultiple' | 'text' | 'textarea' | 'password' | 'email' | 'number' | 'switch';
 type SharedTypeProps = 'numberFormat' | 'divider' | 'datePicker' | 'dateTimePicker' | 'component';
 type TypeProps = HTMLTypeProps | SharedTypeProps;
 export interface InputProps {
@@ -45,6 +46,9 @@ export interface InputProps {
     native?: boolean;
     fullWidth?: boolean;
     [k: string]: unknown;
+    accept?: string;
+    maxSize?: number;
+    fileType?: keyof typeof ACCEPTED_FILE_TYPES;
 }
 export interface RenderProps {
     field: ControllerRenderProps<{

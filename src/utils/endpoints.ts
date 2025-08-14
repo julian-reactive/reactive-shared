@@ -128,7 +128,6 @@ const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null
         delete formData.formData
         paramsOptions = formData
       }
-      console.log("formData", formData);
       
       if (id) {
         if (endpoint.includes('{id}')) {
@@ -138,7 +137,6 @@ const useCustomMutation: UseCustomMutateProps = (endpoint) => (id: string | null
 
         return api.put(`${endpoint}/${id}`, data, paramsOptions)
       }
-      console.log("...paramsOptions", paramsOptions);
       return api.post(endpoint, data, paramsOptions)
     },
     onSuccess: () => {

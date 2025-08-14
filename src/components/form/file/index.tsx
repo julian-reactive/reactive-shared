@@ -14,25 +14,34 @@ import { Loading } from '../../loading'
 import { useAppContext } from '../../../hoc/hooks'
 
 import FilesForUpload from './filesForUpload'
+import FileRow, { FileProp } from './fileRow'
 
-import { ACCEPTED_FILE_TYPES, IMAGE_TYPES, DOCUMENT_TYPES } from '../../uploadFiles/constants'
+import { ACCEPTED_FILE_TYPES, IMAGE_TYPES, DOCUMENT_TYPES } from './constants'
 
 import { BuildInputProps } from '../sharedTypes'
 
+interface SharedUploadFilesProps extends BuildInputProps {
+  uploadedFiles?: FileProp[]
+  disableUpload?: boolean
+}
 
-
- const SharedUploadFiles = ({
-  renderProps: {
+export const SharedUploadFiles = ({
+  renderProps = { field: { onChange: () => {} } },
+  inputProps = {},
+  uploadedFiles = [],
+  disableUpload = false
+}: SharedUploadFilesProps) => {
+  const {
     field: {
-      onChange: onChangeField
-    }
-  },
-  inputProps: {
+      onChange: onChangeField = () => {}
+    } = { onChange: () => {} }
+  } = renderProps || { field: { onChange: () => {} } }
+
+  const {
     multiple = false,
     maxSize = 5 * 1024 * 1024,
     fileType = ACCEPTED_FILE_TYPES.IMAGES as keyof typeof ACCEPTED_FILE_TYPES,
-  }
-}: BuildInputProps ) => {
+  } = inputProps || {}
 
   const idRef = useRef<string>('')
   if (!idRef.current) {
@@ -102,11 +111,12 @@ import { BuildInputProps } from '../sharedTypes'
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-      <Box display="flex" alignItems='center'>
-        <Intl langKey={langKey} variant="h6" color="primary" mr={2} sx={{ fontStyle: 'italic' }} />
-        <Box mr={2}>
-          <input
-            accept={accept}
+      {!disableUpload && (
+        <Box display="flex" alignItems='center'>
+          <Intl langKey={langKey} variant="h6" color="primary" mr={2} sx={{ fontStyle: 'italic' }} />
+          <Box mr={2}>
+            <input
+              accept={accept}
             multiple={multiple}
             style={{ display: 'none' }}
             id={`button-file-${id}`}
@@ -129,10 +139,19 @@ import { BuildInputProps } from '../sharedTypes'
           replace={{ size: (maxSize / 1024 / 1024).toFixed(0) }}
         />
       </Box>
+      )}
       {!!files?.length && (
         <>
         <Intl langKey='FORM.LABEL.FILES_FOR_UPLOAD' variant="caption" color="textSecondary" sx={{ fontStyle: 'italic', mt: 1 }} />
         <FilesForUpload files={files} onRemoveFile={handleRemoveFile} />
+        </>
+      )}
+      {!!uploadedFiles?.length && (
+        <>
+          <Intl langKey='FORM.LABEL.FILES_UPLOADED' variant="caption" color="textSecondary" sx={{ fontStyle: 'italic', mt: 1 }} />
+          {uploadedFiles.map((file, index) => (
+            <FileRow key={`uploaded-file-${index}`} file={file} />
+          ))}
         </>
       )}
     </Box>

@@ -1,73 +1,71 @@
-
-import React, { useEffect, useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 
 import Box from '@mui/system/Box'
 import ListItem from '@mui/material/ListItem'
-import Avatar from '@mui/material/Avatar'
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import Button from '@mui/material/Button'
 
-import CloseIcon from '@mui/icons-material/Close'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
 
 import { api } from '../../../utils/api'
 
 import { Loading } from '../../loading'
 
-import { FileProps } from '../../uploadFiles/hooks'
+import { FileProp } from './sharedTypes'
+import FileAvatar from './avatar'
 
-import { isImageType, isDocumentType } from '../../uploadFiles/constants'
+import { isImageType } from './constants'
 
-const fetchImageBlob = async (fileId: string): Promise<string> => {
-  const response = await api.get(`files/file/${fileId}`, {
-    responseType: 'blob'
+const fetchImageBlob = async (file: FileProp): Promise<string> => {
+  const response = await api.get(`files/file/${file.id}`, {
+    responseType: 'blob',
+    headers: {
+      Accept: file.content_type
+    }
   })
-  return URL.createObjectURL(response)
+  return URL.createObjectURL(new Blob([response]))
 }
 
 interface FileRowProps {
-  file: File
-  handleRemoveFile: () => void
+  file: FileProp
 }
 
-const FileRow = ({ file, handleRemoveFile }: FileRowProps) => {
+const FileRow = ({ file }: FileRowProps) => {
+  const isImage = isImageType(file.content_type)
+
   const { data: imageUrl, isLoading } = useQuery({
     queryKey: [file.type, file.id],
-    queryFn: () => fetchImageBlob(file.id),
+    queryFn: () => fetchImageBlob(file),
     staleTime: 1000 * 60 * 60 * 24,
     gcTime: 1000 * 60 * 60 * 24,
-    enabled: isImageType(file.content_type)
+    enabled: isImage
   })
 
-  const handleDownloadFile = () => {
-    const link = document.createElement('a')
-    // link.href = URL.createObjectURL(file.id)
-    // link.download = file.name
-    // document.body.appendChild(link)
-    // link.click()
-    // document.body.removeChild(link)
-  }
+  const { mutateAsync: getFile } = useMutation({
+    mutationFn: () => api.get(`files/file/${file.id}`)
+  })
 
-  const text = useMemo(() => {
-    if (isImageType(file.content_type)) {
-      return (
-        <>
-          <Typography variant="caption" color="primary">{file.name}</Typography>
-          <Typography variant="caption">{`${(file.size / 1024).toFixed(2)} Kb`}</Typography>
-        </>
-      )
+
+  const handleDownloadFile = async () => {
+    const link = document.createElement('a')
+    link.download = file.name
+    if (isImage) {
+      link.href = imageUrl || ''
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      return
     }
-    if (isDocumentType(file.content_type)) {
-      return (
-        <Button onClick={handleDownloadFile}>
-          <Typography variant="caption" color="primary">{file.name}</Typography>
-          <Typography variant="caption">{`${(file.size / 1024).toFixed(2)} Kb`}</Typography>
-        </Button>
-      )
-    }
-    return '-----'
-  }, [file.content_type])
+
+    const fileBlob = await getFile()
+
+      const url = URL.createObjectURL(new Blob([fileBlob]))
+      const a = document.createElement('a')
+      a.href = url
+      a.download = file.name
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+  }
 
   if (isLoading) {
     return (
@@ -82,14 +80,14 @@ const FileRow = ({ file, handleRemoveFile }: FileRowProps) => {
   return (
     <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
       <Box mr={1}>
-        <Avatar src={imageUrl} alt={file.name} variant="square" />
+        <FileAvatar file={file} imageUrl={imageUrl} />
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
-        {text}
+        <Button onClick={handleDownloadFile}>
+          <Typography variant="caption" color="primary">{file.name}</Typography>
+          <Typography variant="caption">{`${(file.size / 1024).toFixed(2)} Kb`}</Typography>
+        </Button>
       </Box>
-      <IconButton aria-label="close" sx={{ color: (theme) => theme.palette.grey[500] }} onClick={() => handleRemoveFile()}>
-        <CloseIcon />
-      </IconButton>
     </ListItem>
   )
 }

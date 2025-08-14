@@ -6,7 +6,7 @@ import { SvgIconTypeMap } from '@mui/material/SvgIcon'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
 import { SxProps } from '@mui/system'
 
-import { ACCEPTED_FILE_TYPES } from '../uploadFiles/constants'
+import { ACCEPTED_FILE_TYPES } from './file/constants'
 import { OnlyTextProps } from '../../utils'
 
 // Interfaces
